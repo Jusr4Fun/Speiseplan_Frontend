@@ -170,6 +170,7 @@ export default {
       this.dialogDelete = true;
     },
     save() {},
+    deleteItemConfirm() {},
   },
 };
 </script>

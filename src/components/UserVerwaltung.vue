@@ -45,11 +45,11 @@
                       </v-row>
                       <v-row>
                         <v-col cols="12">
-                          <v-overflow-btn
+                          <v-autocomplete
                             :items="abteilungen"
                             v-model="editedItem.abteilung"
                             label="Abteilung"
-                          ></v-overflow-btn>
+                          ></v-autocomplete>
                         </v-col>
                       </v-row>
                       <v-row v-if="password_enable == true">

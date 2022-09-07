@@ -1,21 +1,20 @@
 <template>
   <div class="about">
     <v-row class="pt-13">
-      <v-col order="1" class="pl-16">
+      <v-col order="1" class="justify-space-between pl-16">
         <v-card
-          class="indigo darken-4 white--text text-center"
+          class="indigo darken-4 white--text text-center rounded-xl"
           elevation="2"
           :to="'/' + 'Bestellungen'"
           width="250"
           height="250"
-          rounded
           ><v-icon size="200" color="grey darken-1">mdi-calendar-today</v-icon
           >Bestellung aktuelle Woche
         </v-card>
       </v-col>
-      <v-col order="2">
+      <v-col order="2" class="justify-space-between">
         <v-card
-          class="orange accent-4 white--text text-center"
+          class="orange accent-4 white--text text-center rounded-xl"
           elevation="2"
           :to="'/' + 'Bestellungen'"
           width="250"
@@ -24,11 +23,11 @@
           >Bestellung bestimmte Woche</v-card
         >
       </v-col>
-      <v-col order="3">
+      <v-col order="3" class="justify-space-between">
         <v-card
-          class="red accent-4 white--text text-center"
+          class="red accent-4 white--text text-center rounded-xl"
           elevation="2"
-          :to="'/' + 'Bestellungen'"
+          :to="'/' + 'Teilnehmer'"
           width="250"
           height="250"
           ><v-icon size="200" color="grey darken-3">mdi-account-plus</v-icon
@@ -37,7 +36,7 @@
       </v-col>
       <v-col order="4">
         <v-card
-          class="deep-purple accent-4 white--text text-center"
+          class="deep-purple accent-4 white--text text-center rounded-xl"
           elevation="2"
           :to="'/' + 'Bestellungen'"
           width="250"
@@ -48,9 +47,9 @@
       </v-col>
       <v-col order="5" class="mb-16 pb-16">
         <v-card
-          class="green accent-4 white--text text-center"
+          class="green accent-4 white--text text-center rounded-xl"
           elevation="2"
-          :to="'/' + 'Bestellungen'"
+          :to="'/' + 'GesamtBestellungen'"
           width="250"
           height="250"
           ><v-icon size="200" color="grey darken-3"
@@ -67,7 +66,7 @@
     <v-row class="float-right">
       <v-col class="mr-13 mt-16 pt-16">
         <v-card
-          class="text-center"
+          class="text-center rounded-xl"
           elevation="0"
           :to="'/' + 'Bestellungen'"
           width="150"

@@ -16,8 +16,18 @@
       </v-col>
     </v-row>
     <v-card class="elevation-10">
-      <v-simple-table>
-        <template v-slot:default>
+      <v-data-table
+        :ripple="false"
+        no-gutters
+        :items="bestellungGesamt"
+        :headers="gesamtHeader"
+        :items-per-page="5"
+        class="elevation-10"
+        loading="1"
+        loading-text="Lädt... Bitte warten"
+        hide-default-footer
+      >
+        <!-- <template v-slot:default>
           <thead>
             <tr>
               <th class="text-left">Essensart</th>
@@ -38,8 +48,8 @@
               <td>{{ item.Freitag }}</td>
             </tr>
           </tbody>
-        </template>
-      </v-simple-table>
+        </template> -->
+      </v-data-table>
     </v-card>
     <v-row>
       <v-col
@@ -53,7 +63,6 @@
         :ripple="false"
         no-gutters
         :headers="header"
-        :items="dummy"
         :items-per-page="5"
         class="elevation-10"
         loading="1"
@@ -125,7 +134,7 @@ export default {
       wochen: [],
       wochenBestellung: [],
       bestellungGesamt: [
-        {
+        /* {
           Name: "Normal",
           Montag: 0,
           Dienstag: 0,
@@ -164,7 +173,7 @@ export default {
           Mittwoch: 0,
           Donnerstag: 0,
           Freitag: 0,
-        },
+        }, */
       ],
       header: [
         { text: "Name", value: "Name" },
@@ -175,10 +184,18 @@ export default {
         { text: "Donnerstag", value: "Donnerstag" },
         { text: "Freitag", value: "Freitag" },
       ],
+      gesamtHeader: [
+        { text: "Name", value: "Name" },
+        { text: "Montag", value: "Montag" },
+        { text: "Dienstag", value: "Dienstag" },
+        { text: "Mittwoch", value: "Mittwoch" },
+        { text: "Donnerstag", value: "Donnerstag" },
+        { text: "Freitag", value: "Freitag" },
+      ],
     };
   },
 
-  mounted() {
+  beforeMount() {
     axios.get("http://127.0.0.1:8000/api/wochen").then((response) => {
       this.wochen = response.data.data;
       console.log(response.status);
@@ -186,34 +203,17 @@ export default {
     });
     this.aktuelleWoche = { id: 1, name: "KW 36 2022" };
     axios
-      .get("http://127.0.0.1:8000/api/wochenBestellungen")
+      .get(
+        `http://127.0.0.1:8000/api/wochen=${this.aktuelleWoche.id}=SpezialEssen`
+      )
       .then((response) => {
-        response.data.data.forEach((element) => {
-          if (element.wochen_id == this.aktuelleWoche.id) {
-            var e = [element];
-            var f = this.wochenBestellung;
-            this.wochenBestellung = f.concat(e);
-            console.log(this.wochenBestellung);
-          }
-        });
-        this.wochenBestellung.forEach((element) => {
-          console.log(this.bestellungGesamt);
-          this.bestellungGesamt.forEach((elementZwei) => {
-            if (elementZwei.Name == "Normal") {
-              elementZwei.Montag = elementZwei.Montag + element.montag_normal;
-              console.log(elementZwei.Montag);
-              elementZwei.Dienstag =
-                elementZwei.Dienstag + element.dienstag_normal;
-              console.log(elementZwei.Dienstag);
-              elementZwei.Mittwoch =
-                elementZwei.Mittwoch + element.mittwoch_normal;
-              elementZwei.Donnerstag =
-                elementZwei.Donnerstag + element.donnerstag_normal;
-              elementZwei.Freitag =
-                elementZwei.Freitag + element.freitag_normal;
-            }
-          });
-        });
+        var temp = [{}, {}, {}, {}, {}];
+        temp[0] = response.data.data.Normal;
+        temp[1] = response.data.data.Vegetarisch;
+        temp[2] = response.data.data.Vegan;
+        temp[3] = response.data.data.Glutenfrei;
+        temp[4] = response.data.data.Lactosefrei;
+        this.bestellungGesamt = temp;
         console.log(response.status);
         console.log(response.data.message);
       });

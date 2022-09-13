@@ -11,6 +11,7 @@ import TnAnlegen from "../components/TnAnlegen.vue";
 import MainView from "../views/MainView.vue";
 import AboutComponent from "../components/AboutComponent.vue";
 import AnmeldungView from "../views/AnmeldungView.vue";
+import PasswortReset from "../components/PasswortReset.vue";
 
 Vue.use(VueRouter);
 
@@ -176,6 +177,24 @@ const AuthPages = {
           {
             property: "og:description",
             content: "Main Login Page",
+          },
+        ],
+      },
+    },
+    {
+      path: "/PasswortReset",
+      name: "Passwort zurücksetzen",
+      component: PasswortReset,
+      meta: {
+        title: "Passwort zurücksetzen",
+        metaTags: [
+          {
+            name: "description",
+            content: "Password Reset Page",
+          },
+          {
+            property: "og:description",
+            content: "Password Reset Page",
           },
         ],
       },

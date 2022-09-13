@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 /* import { component } from "vue/types/umd"; */
 import BestellungComponent from "../components/BestellungComponent.vue";
+import IndiviUserVerwaltung from "../components/IndividuelleUserVerwaltung.vue";
 import GesamtBestell from "../components/GesammelteBestellungen.vue";
 import LoginDialog from "../components/LoginDialog.vue";
 import HomeDash from "../components/HomeDashboard.vue";
@@ -97,12 +98,31 @@ const MainPages = {
       },
     },
     {
-      path: "/Benutzer",
-      name: "Nutzer",
+      path: "/BenutzerAdmin",
+      name: "Gesamt Nutzer Verwaltung",
       component: UserVerwaltung,
       meta: {
         icon: "mdi-account-group",
-        title: "Nutzer",
+        title: "Gesamt Nutzer Verwaltung",
+        metaTags: [
+          {
+            name: "description",
+            content: "Kontaktseite",
+          },
+          {
+            property: "og:description",
+            content: "Kontaktseite",
+          },
+        ],
+      },
+    },
+    {
+      path: "/Benutzer",
+      name: "Benutzerverwaltung",
+      component: IndiviUserVerwaltung,
+      meta: {
+        icon: "mdi-account-group",
+        title: "Benutzerverwaltung",
         metaTags: [
           {
             name: "description",

@@ -9,30 +9,42 @@
         <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
     </v-card-title>
-    <v-row class="text-h6 font-weight-bold">
-      <v-col cols="2" class="d-flex align-center text-h5 font-weight-bold ma-2"
-        >Normale Bestellungen</v-col
-      >
-      <v-col cols="1" class="ma-2"
-        ><div class="d-flex justify-center pa-2">Montag</div>
-        <v-text-field type="number" v-model="normal.Montag"></v-text-field
-      ></v-col>
-      <v-col cols="1" class="ma-2"
-        ><div class="d-flex justify-center pa-2">Dienstag</div>
-        <v-text-field type="number" v-model="normal.Dienstag"></v-text-field
-      ></v-col>
-      <v-col cols="1" class="ma-2"
-        ><div class="d-flex justify-center pa-2">Mittwoch</div>
-        <v-text-field type="number" v-model="normal.Mittwoch"></v-text-field
-      ></v-col>
-      <v-col cols="1" class="ma-2"
-        ><div class="d-flex justify-center pa-2">Donnerstag</div>
-        <v-text-field type="number" v-model="normal.Donnerstag"></v-text-field
-      ></v-col>
-      <v-col cols="1" class="ma-2"
-        ><div class="d-flex justify-center pa-2">Freitag</div>
-        <v-text-field type="number" v-model="normal.Freitag"></v-text-field
-      ></v-col>
+    <v-row child-flex
+      ><v-layout child-flex>
+        <v-data-table
+          class="ma-2"
+          :items="normal"
+          :headers="normalHeader"
+          hide-default-footer
+          disable-sort
+          ><template v-slot:top>
+            <v-toolbar flat>
+              <v-toolbar-title
+                class="d-flex align-center text-h5 font-weight-bold ma-2"
+                >Normale Bestellungen</v-toolbar-title
+              ></v-toolbar
+            ></template
+          >
+          <template v-slot:[`item.Montag`]="{ item }"
+            ><v-text-field type="number" v-model="item.Montag"></v-text-field>
+          </template>
+          <template v-slot:[`item.Dienstag`]="{ item }"
+            ><v-text-field type="number" v-model="item.Dienstag"></v-text-field>
+          </template>
+          <template v-slot:[`item.Mittwoch`]="{ item }"
+            ><v-text-field type="number" v-model="item.Mittwoch"></v-text-field>
+          </template>
+          <template v-slot:[`item.Donnerstag`]="{ item }"
+            ><v-text-field
+              type="number"
+              v-model="item.Donnerstag"
+            ></v-text-field>
+          </template>
+          <template v-slot:[`item.Freitag`]="{ item }"
+            ><v-text-field type="number" v-model="item.Freitag"></v-text-field>
+          </template>
+        </v-data-table>
+      </v-layout>
     </v-row>
     <v-row>
       <v-col
@@ -43,14 +55,16 @@
     <v-row></v-row>
     <v-layout child-flex>
       <v-data-table
+        ref="specialBestellungenTabelle"
         :ripple="false"
         no-gutters
         :headers="header"
-        :items="dummy"
+        :items="specialBestellung"
         :items-per-page="5"
         class="elevation-1"
-        loading="1"
-        loading-text="Lädt... Bitte warten"
+        :loading="loadingSpecial"
+        loading-text="Laden... Bitte Warten"
+        no-data-text="noch keine Daten Eingetragen"
         hide-default-footer
       >
         <template v-slot:[`item.Essen`]="{ item }">
@@ -149,54 +163,21 @@ export default {
   data() {
     return {
       inputDialog: false,
+      loadingSpecial: true,
       typs: ["Vegan", "Vegetarisch", "Glutenfrei", "Laktosefrei"],
       nema: ["Kevin", "Michael", "Hans", "Stephan"],
       inputRules: [(v) => !!v || "Schreib was rein"],
-      normal: {
-        Montag: 8,
-        Dienstag: 8,
-        Mittwoch: 8,
-        Donnerstag: 8,
-        Freitag: 8,
-      },
-      dummy: [
-        {
-          Name: "Kainz",
-          Essen: "Vegan",
-          Montag: false,
-          Dienstag: true,
-          Mittwoch: true,
-          Donnerstag: false,
-          Freitag: true,
-        },
-        {
-          Name: "Hans",
-          Essen: "Vegetarisch",
-          Montag: false,
-          Dienstag: true,
-          Mittwoch: true,
-          Donnerstag: false,
-          Freitag: true,
-        },
-        {
-          Name: "Franz",
-          Essen: "Glutenfrei",
-          Montag: false,
-          Dienstag: true,
-          Mittwoch: true,
-          Donnerstag: false,
-          Freitag: true,
-        },
-        {
-          Name: "Georg",
-          Essen: "Laktosefrei",
-          Montag: false,
-          Dienstag: true,
-          Mittwoch: true,
-          Donnerstag: false,
-          Freitag: true,
-        },
+      normalHeader: [
+        { text: "Montag", value: "Montag" },
+        { text: "Dienstag", value: "Dienstag" },
+        { text: "Mittwoch", value: "Mittwoch" },
+        { text: "Donnerstag", value: "Donnerstag" },
+        { text: "Freitag", value: "Freitag" },
       ],
+      normal: [
+        { Montag: 8, Dienstag: 8, Mittwoch: 8, Donnerstag: 8, Freitag: 8 },
+      ],
+      specialBestellung: [],
       header: [
         { text: "Name", value: "Name" },
         { text: "Essen", value: "Essen" },
@@ -208,6 +189,9 @@ export default {
       ],
     };
   },
+  mounted() {
+    this.fillSpecialBestellung();
+  },
   methods: {
     getColor(Essen) {
       if (Essen == "Vegan") return "green";
@@ -218,6 +202,14 @@ export default {
     speichern() {
       console.log("Gespeichert");
       this.inputDialog = false;
+    },
+    fillSpecialBestellung() {
+      this.specialBestellung = [];
+      if (this.specialBestellung.length == 0) {
+        this.loadingSpecial = true;
+      } else {
+        this.loadingSpecial = false;
+      }
     },
   },
 };

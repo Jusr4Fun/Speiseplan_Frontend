@@ -25,6 +25,7 @@
         class="elevation-10"
         loading="1"
         loading-text="Lädt... Bitte warten"
+        no-data-text="noch keine Daten Eingetragen"
         hide-default-footer
       >
         <!-- <template v-slot:default>
@@ -67,6 +68,7 @@
         class="elevation-10"
         loading="1"
         loading-text="Lädt... Bitte warten"
+        no-data-text="noch keine Daten Eingetragen"
         hide-default-footer
       >
         <template v-slot:[`item.Essen`]="{ item }">

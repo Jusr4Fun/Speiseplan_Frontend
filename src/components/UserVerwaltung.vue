@@ -9,6 +9,8 @@
           hide-default-footer
           sort-by="name"
           class="elevation-10 ma-4"
+          loading-text="Lädt... Bitte warten"
+          no-data-text="noch keine Daten Eingetragen"
         >
           <template v-slot:top>
             <v-toolbar flat>

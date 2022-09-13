@@ -205,11 +205,7 @@ export default {
     },
     fillSpecialBestellung() {
       this.specialBestellung = [];
-      if (this.specialBestellung.length == 0) {
-        this.loadingSpecial = true;
-      } else {
-        this.loadingSpecial = false;
-      }
+      this.loadingSpecial = false;
     },
   },
 };

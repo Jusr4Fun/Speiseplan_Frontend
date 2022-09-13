@@ -7,24 +7,15 @@
       <v-container>
         <v-row>
           <v-col cols="12">
-            <v-text-field
-              label="Email"
-              required
-              :rules="inputRules"
-            ></v-text-field>
+            <v-text-field label="Email" :rules="inputRules"></v-text-field>
           </v-col>
           <v-col cols="12">
-            <v-text-field
-              label="Betreff"
-              required
-              :rules="inputRules"
-            ></v-text-field>
+            <v-text-field label="Betreff" :rules="inputRules"></v-text-field>
           </v-col>
           <v-col cols="12">
             <v-textarea
               label="Details"
               outlined
-              required
               :rules="inputRules"
             ></v-textarea>
           </v-col>

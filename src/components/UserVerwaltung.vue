@@ -9,13 +9,15 @@
           hide-default-footer
           sort-by="name"
           class="elevation-10 ma-4"
+          loading-text="Lädt... Bitte warten"
+          no-data-text="noch keine Daten Eingetragen"
         >
           <template v-slot:top>
             <v-toolbar flat>
               <v-toolbar-title>Nutzer-Daten</v-toolbar-title>
               <v-divider class="mx-4" inset vertical></v-divider>
               <v-spacer></v-spacer>
-              <v-dialog v-model="dialog" max-width="500px">
+              <v-dialog v-model="dialog" max-width="500px" persistent>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     color="primary"
@@ -45,16 +47,17 @@
                       </v-row>
                       <v-row>
                         <v-col cols="12">
-                          <v-text-field
+                          <v-autocomplete
+                            :items="abteilungen"
                             v-model="editedItem.abteilung"
                             label="Abteilung"
-                          ></v-text-field>
+                          ></v-autocomplete>
                         </v-col>
                       </v-row>
                       <v-row v-if="password_enable == true">
                         <v-col cols="12">
                           <v-text-field
-                            :type="show1 ? 'text' : 'password'"
+                            :type="'password'"
                             v-model="editedItem.password"
                             label="Passwort"
                           ></v-text-field>
@@ -82,7 +85,7 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
-              <v-dialog v-model="dialogDelete" max-width="800px">
+              <v-dialog v-model="dialogDelete" max-width="800px" persistent>
                 <v-card>
                   <v-card-title class="text-h5 justify-center"
                     >Sind sie sich sicher, dass sie den Nutzer entfernen
@@ -148,6 +151,7 @@ export default {
     ],
     response: [],
     users: [],
+    abteilungen: [],
     editedIndex: -1,
     editedItem: {
       id: "",
@@ -184,6 +188,15 @@ export default {
   mounted() {
     axios.get("http://127.0.0.1:8000/api/users").then((response) => {
       this.users = response.data.data;
+      console.log(response.status);
+      console.log(response.data.message);
+    });
+    axios.get("http://127.0.0.1:8000/api/abteilungen").then((response) => {
+      response.data.data.forEach((element) => {
+        var a = [{ text: element.name, value: element.name }];
+        var f = this.abteilungen;
+        this.abteilungen = f.concat(a);
+      });
       console.log(response.status);
       console.log(response.data.message);
     });

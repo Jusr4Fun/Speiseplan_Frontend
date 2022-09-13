@@ -42,13 +42,6 @@
         $route.meta.title || "Default title"
       }}</v-toolbar-title>
       <v-spacer></v-spacer>
-
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-      <v-btn icon class="ma-2">
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
       <v-menu bottom min-width="200px" rounded offset-y class="ma-2">
         <template v-slot:activator="{ on }">
           <v-btn
@@ -78,7 +71,9 @@
                   {{ user.email }}
                 </p>
                 <v-divider class="my-3"></v-divider>
-                <v-btn depressed rounded text> Benutzerverwaltung </v-btn>
+                <v-btn depressed rounded text :to="'/Benutzer'">
+                  Benutzerverwaltung
+                </v-btn>
                 <v-divider class="my-3"></v-divider>
                 <v-btn depressed rounded text> Abmelden </v-btn>
               </div>

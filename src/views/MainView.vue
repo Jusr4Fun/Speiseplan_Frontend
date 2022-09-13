@@ -71,7 +71,9 @@
                   {{ user.email }}
                 </p>
                 <v-divider class="my-3"></v-divider>
-                <v-btn depressed rounded text> Benutzerverwaltung </v-btn>
+                <v-btn depressed rounded text :to="'/Benutzer'">
+                  Benutzerverwaltung
+                </v-btn>
                 <v-divider class="my-3"></v-divider>
                 <v-btn depressed rounded text> Abmelden </v-btn>
               </div>

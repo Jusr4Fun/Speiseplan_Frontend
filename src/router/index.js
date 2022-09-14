@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import store from "@/store/index";
 /* import { component } from "vue/types/umd"; */
 import BestellungComponent from "../components/BestellungComponent.vue";
 import IndiviUserVerwaltung from "../components/IndividuelleUserVerwaltung.vue";
@@ -12,15 +13,17 @@ import MainView from "../views/MainView.vue";
 import AboutComponent from "../components/AboutComponent.vue";
 import AnmeldungView from "../views/AnmeldungView.vue";
 import PasswortReset from "../components/PasswortReset.vue";
+import SupportComponent from "../components/SupportComponent.vue";
 
 Vue.use(VueRouter);
-
-const Authentification = true;
 
 const MainPages = {
   path: "/",
   name: "Main",
   component: MainView,
+  meta: {
+    requiresAuth: true,
+  },
   children: [
     {
       path: "/Dashboard",
@@ -251,52 +254,18 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.path !== "/login" && !Authentification) next({ path: "/login" });
-  else next();
+  const authUser = store.getters["auth/authUser"];
+  const reqAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const loginQuery = { path: "/login", query: { redirect: to.fullPath } };
+  if (reqAuth && !authUser) {
+    store.dispatch("auth/getAuthUser").then(() => {
+      if (!store.getters["auth/authUser"]) next(loginQuery);
+      else next();
+    });
+  } else {
+    next();
+  }
 });
-
-// router.beforeEach((to, from, next) => {
-//   const nearestWithTitle = to.matched
-//     .slice()
-//     .reverse()
-//     .find((r) => r.meta && r.meta.title);
-
-//   const nearestWithMeta = to.matched
-//     .slice()
-//     .reverse()
-//     .find((r) => r.meta && r.meta.metaTags);
-
-//   const previousNearestWithMeta = from.matched
-//     .slice()
-//     .reverse()
-//     .find((r) => r.meta && r.meta.metaTags);
-
-//   if (nearestWithTitle) {
-//     document.title = nearestWithTitle.meta.title;
-//   } else if (previousNearestWithMeta) {
-//     document.title = previousNearestWithMeta.meta.title;
-//   }
-
-//   Array.from(document.querySelectorAll("[data-vue-router-controlled]")).map(
-//     (el) => el.parentNode.removeChild(el)
-//   );
-
-//   if (!nearestWithMeta) return next();
-
-//   nearestWithMeta.meta.metaTags
-//     .map((tagDef) => {
-//       const tag = document.createElement("meta");
-//       Object.keys(tagDef).forEach((key) => {
-//         tag.setAttribute(key, tagDef[key]);
-//       });
-//       tag.setAttribute("data-vue-router-controlled", "");
-//       return tag;
-//     })
-
-//     .forEach((tag) => document.head.appendChild(tag));
-
-//   next();
-// });
 
 const DEFAULT_TITLE = "Some Default Title";
 router.afterEach((to) => {

@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import * as API from "@/services/API";
 export default {
   data: () => ({
     dialog: false,
@@ -186,12 +186,12 @@ export default {
   },
 
   mounted() {
-    axios.get("http://127.0.0.1:8000/api/users").then((response) => {
+    API.apiClient.get(`/users`).then((response) => {
       this.users = response.data.data;
       console.log(response.status);
       console.log(response.data.message);
     });
-    axios.get("http://127.0.0.1:8000/api/abteilungen").then((response) => {
+    API.apiClient.get(`/abteilungen`).then((response) => {
       response.data.data.forEach((element) => {
         var a = [{ text: element.name, value: element.name }];
         var f = this.abteilungen;
@@ -204,8 +204,8 @@ export default {
 
   methods: {
     createUser() {
-      axios
-        .post("http://127.0.0.1:8000/api/users", this.editedItem)
+      API.apiClient
+        .post(`/users`, this.editedItem)
         .then((response) => {
           console.log(response.status);
           console.log(response.data.message);
@@ -224,8 +224,8 @@ export default {
     },
 
     deleteUser(id) {
-      axios
-        .delete("http://127.0.0.1:8000/api/delete=" + id)
+      API.apiClient
+        .delete(`/delete=${id}`)
         .then((response) => {
           console.log(response.status);
           console.log(response.data.message);
@@ -239,8 +239,8 @@ export default {
     },
 
     updateUser() {
-      axios
-        .post("http://127.0.0.1:8000/api/updateUser", this.editedItem)
+      API.apiClient
+        .post(`/updateUser`, this.editedItem)
         .then((response) => {
           console.log(response.status);
           console.log(response.data.message);

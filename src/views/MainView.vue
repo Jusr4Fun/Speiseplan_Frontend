@@ -66,7 +66,7 @@
                   <span class="white--text text-h5">{{ user.initials }}</span>
                 </v-avatar>
                 <br />
-                <h3 class="pa-md-2">{{ user.fullName }}</h3>
+                <h3 class="pa-md-2">{{ user.name }}</h3>
                 <p class="text-caption mt-1">
                   {{ user.email }}
                 </p>
@@ -75,7 +75,7 @@
                   Benutzerverwaltung
                 </v-btn>
                 <v-divider class="my-3"></v-divider>
-                <v-btn depressed rounded text> Abmelden </v-btn>
+                <v-btn depressed rounded @click="logout"> Abmelden </v-btn>
               </div>
             </v-list-item-content>
           </v-card>
@@ -89,10 +89,11 @@
 </template>
 
 <script>
-/* import router from '@/router' */
+import store from "@/store/index";
+/* import AuthService from "@/services/AuthService"; */
 export default {
   name: "MainApp",
-  beforeMount() {
+  mounted() {
     this.$router.options.routes.forEach((route) => {
       if (route.name == "Main") {
         route.children.forEach((childroute) => {
@@ -104,17 +105,48 @@ export default {
         });
       }
     });
+    this.user = Object.assign({}, store.getters["auth/authUser"]);
+    const intialSplit = this.user.name.split(" ");
+    this.user.initials = intialSplit[0][0] + intialSplit[1][0];
+  },
+  beforeUpdate() {
+    this.user = Object.assign({}, store.getters["auth/authUser"]);
+    const intialSplit = this.user.name.split(" ");
+    this.user.initials = intialSplit[0][0] + intialSplit[1][0];
   },
   data: () => ({
     drawer: null,
     usercard: null,
     expand: false,
     user: {
-      initials: "KB",
-      fullName: "Kevin Barth",
-      email: "kbarth@fisi-hr.de",
+      email: "",
+      emailVerified: "",
+      id: 0,
+      name: "",
+      initials: "",
+    },
+    defaultUser: {
+      email: "",
+      emailVerified: "",
+      id: 0,
+      name: "",
+      initials: "",
     },
     items: [],
   }),
+  methods: {
+    logout() {
+      /* AuthService.logout()
+        .then(() => {
+          this.$router.push("/login");
+          this.user = this.defaultUser;
+          this.$forceUpdate();
+        })
+        .catch((error) => console.log(error.data)); */
+      store.dispatch("auth/logout").then(() => {
+        console.log("Kevin");
+      });
+    },
+  },
 };
 </script>

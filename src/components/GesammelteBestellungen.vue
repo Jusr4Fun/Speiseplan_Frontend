@@ -112,7 +112,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import * as API from "@/services/API";
 export default {
   name: "Home-View",
 
@@ -198,16 +198,14 @@ export default {
   },
 
   beforeMount() {
-    axios.get("http://127.0.0.1:8000/api/wochen").then((response) => {
+    API.apiClient.get(`/wochen`).then((response) => {
       this.wochen = response.data.data;
       console.log(response.status);
       console.log(response.data.message);
     });
     this.aktuelleWoche = { id: 1, name: "KW 36 2022" };
-    axios
-      .get(
-        `http://127.0.0.1:8000/api/wochen=${this.aktuelleWoche.id}=SpezialEssen`
-      )
+    API.apiClient
+      .get(`/wochen=${this.aktuelleWoche.id}=SpezialEssen`)
       .then((response) => {
         var temp = [{}, {}, {}, {}, {}];
         temp[0] = response.data.data.Normal;

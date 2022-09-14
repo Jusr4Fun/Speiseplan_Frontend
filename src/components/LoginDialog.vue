@@ -12,6 +12,8 @@
                 name="login"
                 label="Login E-Mail"
                 type="text"
+                v-model="email"
+                :rules="[rules.required]"
                 prepend-icon="mdi-account"
               >
               </v-text-field>
@@ -28,7 +30,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" to="/">Login</v-btn>
+            <v-btn color="primary" @click="login">Login</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -37,6 +39,7 @@
 </template>
 
 <script>
+import AuthService from "@/services/AuthService";
 export default {
   name: "LoginDialog",
   data() {
@@ -45,12 +48,24 @@ export default {
       show2: true,
       show3: false,
       show4: false,
+      email: "",
       password: "",
       rules: {
         required: (value) => !!value || "Required.",
         min: (v) => v.length >= 8 || "Min 8 characters",
       },
     };
+  },
+  methods: {
+    login() {
+      const payload = {
+        email: this.email,
+        password: this.password,
+      };
+      AuthService.login(payload)
+        .then(() => this.$router.push("/dashboard"))
+        .catch((error) => console.log(error.data));
+    },
   },
 };
 </script>

@@ -11,6 +11,7 @@ import TnAnlegen from "../components/TnAnlegen.vue";
 import MainView from "../views/MainView.vue";
 import AboutComponent from "../components/AboutComponent.vue";
 import AnmeldungView from "../views/AnmeldungView.vue";
+import SupportComponent from "../components/SupportComponent.vue";
 
 Vue.use(VueRouter);
 
@@ -123,6 +124,25 @@ const MainPages = {
       meta: {
         icon: "mdi-account-group",
         title: "Benutzerverwaltung",
+        metaTags: [
+          {
+            name: "description",
+            content: "Kontaktseite",
+          },
+          {
+            property: "og:description",
+            content: "Kontaktseite",
+          },
+        ],
+      },
+    },
+    {
+      path: "/Support",
+      name: "Support",
+      component: SupportComponent,
+      meta: {
+        icon: "mdi-face-agent",
+        title: "Support",
         metaTags: [
           {
             name: "description",

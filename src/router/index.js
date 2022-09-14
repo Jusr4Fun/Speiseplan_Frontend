@@ -137,6 +137,25 @@ const MainPages = {
       },
     },
     {
+      path: "/Support",
+      name: "Support",
+      component: SupportComponent,
+      meta: {
+        icon: "mdi-face-agent",
+        title: "Support",
+        metaTags: [
+          {
+            name: "description",
+            content: "Kontaktseite",
+          },
+          {
+            property: "og:description",
+            content: "Kontaktseite",
+          },
+        ],
+      },
+    },
+    {
       path: "/Ueber",
       name: "Über",
       component: AboutComponent,

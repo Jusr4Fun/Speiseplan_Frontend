@@ -9,50 +9,65 @@
         <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
     </v-card-title>
-    <v-row child-flex
-      ><v-layout child-flex>
-        <v-data-table
-          class="ma-2"
-          :items="normal"
-          :headers="normalHeader"
-          hide-default-footer
-          disable-sort
-          ><template v-slot:top>
-            <v-toolbar flat>
-              <v-toolbar-title
-                class="d-flex align-center text-h5 font-weight-bold ma-2"
-                >Normale Bestellungen</v-toolbar-title
-              ></v-toolbar
-            ></template
-          >
-          <template v-slot:[`item.Montag`]="{ item }"
-            ><v-text-field type="number" v-model="item.Montag"></v-text-field>
-          </template>
-          <template v-slot:[`item.Dienstag`]="{ item }"
-            ><v-text-field type="number" v-model="item.Dienstag"></v-text-field>
-          </template>
-          <template v-slot:[`item.Mittwoch`]="{ item }"
-            ><v-text-field type="number" v-model="item.Mittwoch"></v-text-field>
-          </template>
-          <template v-slot:[`item.Donnerstag`]="{ item }"
-            ><v-text-field
-              type="number"
-              v-model="item.Donnerstag"
-            ></v-text-field>
-          </template>
-          <template v-slot:[`item.Freitag`]="{ item }"
-            ><v-text-field type="number" v-model="item.Freitag"></v-text-field>
-          </template>
-        </v-data-table>
-      </v-layout>
-    </v-row>
-    <v-row>
-      <v-col
-        class="d-flex align-center justify-start ma-2 font-weight-bold text-h5"
-        ><div>Spezial Bestellungen</div>
-      </v-col>
-    </v-row>
-    <v-row></v-row>
+    <v-layout child-flex>
+      <v-data-table
+        class="ma-2 elevation-1"
+        :ripple="false"
+        no-gutters
+        :items="normal"
+        :headers="normalHeader"
+        hide-default-footer
+        disable-sort
+        ><template v-slot:top>
+          <v-toolbar flat>
+            <v-toolbar-title
+              class="d-flex align-center text-h5 font-weight-bold ma-2"
+              >Normale Bestellungen</v-toolbar-title
+            ></v-toolbar
+          ></template
+        >
+        <template v-slot:[`item.Montag`]="{ item }">
+          <v-text-field
+            class="justify-center"
+            min="0"
+            type="number"
+            v-model="item.Montag"
+          ></v-text-field>
+        </template>
+        <template v-slot:[`item.Dienstag`]="{ item }"
+          ><v-text-field
+            class="justify-center"
+            min="0"
+            type="number"
+            v-model="item.Dienstag"
+          ></v-text-field>
+        </template>
+        <template v-slot:[`item.Mittwoch`]="{ item }"
+          ><v-text-field
+            class="justify-center"
+            min="0"
+            type="number"
+            v-model="item.Mittwoch"
+          ></v-text-field>
+        </template>
+        <template v-slot:[`item.Donnerstag`]="{ item }"
+          ><v-text-field
+            class="justify-center"
+            min="0"
+            type="number"
+            v-model="item.Donnerstag"
+          ></v-text-field>
+        </template>
+        <template v-slot:[`item.Freitag`]="{ item }"
+          ><v-text-field
+            class="justify-center"
+            min="0"
+            type="number"
+            v-model="item.Freitag"
+          ></v-text-field>
+        </template>
+      </v-data-table>
+    </v-layout>
     <v-layout child-flex>
       <v-data-table
         ref="specialBestellungenTabelle"
@@ -61,12 +76,20 @@
         :headers="header"
         :items="specialBestellung"
         :items-per-page="5"
-        class="elevation-1"
+        class="elevation-1 ma-2"
         :loading="loadingSpecial"
         loading-text="Laden... Bitte Warten"
         no-data-text="noch keine Daten Eingetragen"
         hide-default-footer
       >
+        <template v-slot:top>
+          <v-toolbar flat>
+            <v-toolbar-title
+              class="d-flex align-center text-h5 font-weight-bold ma-2"
+              >Spezial Bestellungen</v-toolbar-title
+            ></v-toolbar
+          ></template
+        >
         <template v-slot:[`item.Essen`]="{ item }">
           <v-chip :color="getColor(item.Essen)" dark>
             {{ item.Essen }}

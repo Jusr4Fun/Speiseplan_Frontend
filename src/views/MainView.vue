@@ -89,6 +89,7 @@
 </template>
 
 <script>
+import Admin from "../middleware/admin";
 import store from "@/store/index";
 /* import AuthService from "@/services/AuthService"; */
 export default {
@@ -97,11 +98,26 @@ export default {
     this.$router.options.routes.forEach((route) => {
       if (route.name == "Main") {
         route.children.forEach((childroute) => {
-          this.items.push({
-            name: childroute.name,
-            path: childroute.path,
-            icon: childroute.meta.icon,
-          });
+          if (
+            typeof childroute.meta.middleware == "undefined" ||
+            Admin() == store.getters["auth/role"]
+          ) {
+            this.items.push({
+              name: childroute.name,
+              path: childroute.path,
+              icon: childroute.meta.icon,
+            });
+          } else {
+            for (const role of childroute.meta.middleware) {
+              if (role() == store.getters["auth/role"]) {
+                this.items.push({
+                  name: childroute.name,
+                  path: childroute.path,
+                  icon: childroute.meta.icon,
+                });
+              }
+            }
+          }
         });
       }
     });

@@ -28,28 +28,6 @@
         no-data-text="noch keine Daten Eingetragen"
         hide-default-footer
       >
-        <!-- <template v-slot:default>
-          <thead>
-            <tr>
-              <th class="text-left">Essensart</th>
-              <th class="text-left">Montag</th>
-              <th class="text-left">Dienstag</th>
-              <th class="text-left">Mittwoch</th>
-              <th class="text-left">Donnerstag</th>
-              <th class="text-left">Freitag</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in bestellungGesamt" :key="item.Name">
-              <td>{{ item.Name }}</td>
-              <td>{{ item.Montag }}</td>
-              <td>{{ item.Dienstag }}</td>
-              <td>{{ item.Mittwoch }}</td>
-              <td>{{ item.Donnerstag }}</td>
-              <td>{{ item.Freitag }}</td>
-            </tr>
-          </tbody>
-        </template> -->
       </v-data-table>
     </v-card>
     <v-row>
@@ -63,7 +41,7 @@
       <v-data-table
         :ripple="false"
         no-gutters
-        :headers="header"
+        :headers="spezialheader"
         :items-per-page="5"
         class="elevation-10"
         loading="1"
@@ -177,9 +155,8 @@ export default {
           Freitag: 0,
         }, */
       ],
-      header: [
+      spezialheader: [
         { text: "Name", value: "Name" },
-        { text: "Essen", value: "Essen" },
         { text: "Montag", value: "Montag" },
         { text: "Dienstag", value: "Dienstag" },
         { text: "Mittwoch", value: "Mittwoch" },
@@ -214,6 +191,7 @@ export default {
         temp[3] = response.data.data.Glutenfrei;
         temp[4] = response.data.data.Lactosefrei;
         this.bestellungGesamt = temp;
+        console.log(response.data.data);
         console.log(response.status);
         console.log(response.data.message);
       });

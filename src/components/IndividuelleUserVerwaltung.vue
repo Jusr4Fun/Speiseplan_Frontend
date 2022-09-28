@@ -29,7 +29,7 @@
               <v-col cols="12">
                 <v-text-field
                   :type="'password'"
-                  v-model="editedItem.password"
+                  v-model="password"
                   label="Passwort"
                 ></v-text-field>
               </v-col>
@@ -61,20 +61,47 @@
 </template>
 
 <script>
+import * as API from "@/services/API";
+import store from "@/store/index";
 export default {
   data: () => ({
-    user: { name: "Kevin Barth", abteilung: "Fisi" },
+    user: {},
+    password: null,
     editedItem: {
       id: "",
       name: "",
       abteilung: "",
-      password: "",
+      abteilung_id: "",
       email: "",
     },
   }),
 
+  mounted() {
+    this.user = store.getters["auth/authUser"];
+    this.editedItem = this.user;
+  },
+
   methods: {
-    save() {},
+    save() {
+      if (this.password == null) {
+        this.updateUser();
+      } else {
+        this.editedItem["password"] = this.password;
+        this.updateUser();
+      }
+    },
+
+    updateUser() {
+      API.apiClient
+        .post(`/updateUser`, this.editedItem)
+        .then((response) => {
+          console.log(response.status);
+          console.log(response.data.message);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
 };
 </script>

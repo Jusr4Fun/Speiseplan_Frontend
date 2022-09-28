@@ -49,7 +49,7 @@
                         <v-col cols="12">
                           <v-autocomplete
                             :items="abteilungen"
-                            v-model="editedItem.abteilung"
+                            v-model="editedItem.abteilung_id"
                             label="Abteilung"
                           ></v-autocomplete>
                         </v-col>
@@ -156,7 +156,7 @@ export default {
     editedItem: {
       id: "",
       name: "",
-      abteilung: "",
+      abteilung_id: "",
       password: "",
       email: "",
     },
@@ -193,7 +193,7 @@ export default {
     });
     API.apiClient.get(`/abteilungen`).then((response) => {
       response.data.data.forEach((element) => {
-        var a = [{ text: element.name, value: element.name }];
+        var a = [{ text: element.name, value: element.name, id: element.id }];
         var f = this.abteilungen;
         this.abteilungen = f.concat(a);
       });
@@ -204,17 +204,23 @@ export default {
 
   methods: {
     createUser() {
+      for (const abteilung of this.abteilungen) {
+        if (this.editedItem.abteilung_id == abteilung.text) {
+          this.editedItem.abteilung_id = abteilung.id;
+        }
+      }
       API.apiClient
         .post(`/users`, this.editedItem)
         .then((response) => {
           console.log(response.status);
           console.log(response.data.message);
           this.editedItem.id = response.data.data.id;
-          if (this.editedIndex > -1) {
-            Object.assign(this.users[this.editedIndex], this.editedItem);
-          } else {
-            this.users.push(this.editedItem);
+          for (const abteilung of this.abteilungen) {
+            if (this.editedItem.abteilung_id == abteilung.id) {
+              this.editedItem.abteilung = abteilung.text;
+            }
           }
+          this.users.push(this.editedItem);
           this.close();
         })
         .catch((error) => {
@@ -239,16 +245,22 @@ export default {
     },
 
     updateUser() {
+      for (const abteilung of this.abteilungen) {
+        if (this.editedItem.abteilung_id == abteilung.text) {
+          this.editedItem.abteilung_id = abteilung.id;
+        }
+      }
       API.apiClient
         .post(`/updateUser`, this.editedItem)
         .then((response) => {
           console.log(response.status);
           console.log(response.data.message);
-          if (this.editedIndex > -1) {
-            Object.assign(this.users[this.editedIndex], this.editedItem);
-          } else {
-            this.users.push(this.editedItem);
+          for (const abteilung of this.abteilungen) {
+            if (this.editedItem.abteilung_id == abteilung.id) {
+              this.editedItem.abteilung = abteilung.text;
+            }
           }
+          Object.assign(this.users[this.editedIndex], this.editedItem);
           this.close();
         })
         .catch((error) => {

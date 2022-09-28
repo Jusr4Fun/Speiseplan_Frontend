@@ -14,6 +14,11 @@ import AboutComponent from "../components/AboutComponent.vue";
 import AnmeldungView from "../views/AnmeldungView.vue";
 import PasswortReset from "../components/PasswortReset.vue";
 import SupportComponent from "../components/SupportComponent.vue";
+import roleCheck from "./roleCheck";
+import Nutzer from "../middleware/nutzer";
+import Koch from "../middleware/koch";
+import Admin from "../middleware/admin";
+import Gast from "../middleware/gast";
 
 Vue.use(VueRouter);
 
@@ -21,9 +26,6 @@ const MainPages = {
   path: "/",
   name: "Main",
   component: MainView,
-  meta: {
-    requiresAuth: true,
-  },
   children: [
     {
       path: "/Dashboard",
@@ -32,6 +34,8 @@ const MainPages = {
       meta: {
         icon: "mdi-home",
         title: "Dashboard",
+        requiresAuth: true,
+        middleware: [Nutzer, Gast, Koch],
         metaTags: [
           {
             name: "description",
@@ -51,6 +55,8 @@ const MainPages = {
       meta: {
         icon: "mdi-basket",
         title: "Bestellungen",
+        requiresAuth: true,
+        middleware: [Nutzer],
         metaTags: [
           {
             name: "description",
@@ -70,6 +76,8 @@ const MainPages = {
       meta: {
         icon: "mdi-basket",
         title: "Gesamt Bestellungen",
+        requiresAuth: true,
+        middleware: [Koch],
         metaTags: [
           {
             name: "description",
@@ -89,6 +97,8 @@ const MainPages = {
       meta: {
         icon: "mdi-account-group",
         title: "Nutzer",
+        requiresAuth: true,
+        middleware: [Nutzer],
         metaTags: [
           {
             name: "description",
@@ -108,6 +118,8 @@ const MainPages = {
       meta: {
         icon: "mdi-account-group",
         title: "Gesamt Nutzer Verwaltung",
+        requiresAuth: true,
+        middleware: [Admin],
         metaTags: [
           {
             name: "description",
@@ -127,6 +139,8 @@ const MainPages = {
       meta: {
         icon: "mdi-account-group",
         title: "Benutzerverwaltung",
+        requiresAuth: true,
+        middleware: [Nutzer],
         metaTags: [
           {
             name: "description",
@@ -146,6 +160,7 @@ const MainPages = {
       meta: {
         icon: "mdi-face-agent",
         title: "Support",
+        requiresAuth: false,
         metaTags: [
           {
             name: "description",
@@ -165,6 +180,7 @@ const MainPages = {
       meta: {
         icon: "mdi-information",
         title: "Über",
+        requiresAuth: false,
         metaTags: [
           {
             name: "description",
@@ -254,18 +270,37 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  const middleware = to.meta.middleware;
+  const context = { to, from, next, store };
   const authUser = store.getters["auth/authUser"];
   const reqAuth = to.matched.some((record) => record.meta.requiresAuth);
   const loginQuery = { path: "/login", query: { redirect: to.fullPath } };
   if (reqAuth && !authUser) {
     store.dispatch("auth/getAuthUser").then(() => {
-      if (!store.getters["auth/authUser"]) next(loginQuery);
-      else next();
+      if (!store.getters["auth/authUser"]) {
+        next(loginQuery);
+      } else {
+        checkRole(middleware, context);
+      }
     });
+  } else if (reqAuth) {
+    checkRole(middleware, context);
   } else {
     next();
   }
 });
+
+const checkRole = function (middleware, context) {
+  const dash = { path: "/dashboard", query: { redirect: context.to.fullPath } };
+  if (middleware.lenght == 0) {
+    return context.next();
+  }
+  if (roleCheck(context, middleware)) {
+    return context.next();
+  } else {
+    return context.next(dash);
+  }
+};
 
 const DEFAULT_TITLE = "Some Default Title";
 router.afterEach((to) => {

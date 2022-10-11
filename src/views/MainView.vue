@@ -91,7 +91,7 @@
 <script>
 import Admin from "../middleware/admin";
 import store from "@/store/index";
-/* import AuthService from "@/services/AuthService"; */
+
 export default {
   name: "MainApp",
   mounted() {
@@ -152,13 +152,6 @@ export default {
   }),
   methods: {
     logout() {
-      /* AuthService.logout()
-        .then(() => {
-          this.$router.push("/login");
-          this.user = this.defaultUser;
-          this.$forceUpdate();
-        })
-        .catch((error) => console.log(error.data)); */
       store.dispatch("auth/logout").then(() => {
         console.log("Kevin");
       });

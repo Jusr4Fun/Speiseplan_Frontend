@@ -17,7 +17,6 @@
     </v-row>
     <v-card class="elevation-10">
       <v-data-table
-        :ripple="false"
         no-gutters
         :items="bestellungGesamt"
         :headers="gesamtHeader"
@@ -39,40 +38,55 @@
     <v-row></v-row>
     <v-layout child-flex>
       <v-data-table
-        :ripple="false"
         no-gutters
         :headers="spezialheader"
-        :items-per-page="5"
+        :items="spezialBestellungen"
         class="elevation-10"
         loading="1"
         loading-text="Lädt... Bitte warten"
         no-data-text="noch keine Daten Eingetragen"
         hide-default-footer
       >
-        <template v-slot:[`item.Essen`]="{ item }">
-          <v-chip :color="getColor(item.Essen)" dark>
-            {{ item.Essen }}
+        <template v-slot:[`item.Montag`]="{ item }">
+          <v-chip v-if="item.Montag != ''" :color="getColor(item.Montag)" dark>
+            {{ item.Montag }}
           </v-chip>
         </template>
-        <template v-slot:[`item.Montag`]="{ item }">
-          <v-simple-checkbox v-model="item.Montag" :ripple="false">
-          </v-simple-checkbox>
-        </template>
         <template v-slot:[`item.Dienstag`]="{ item }">
-          <v-simple-checkbox v-model="item.Dienstag" :ripple="false">
-          </v-simple-checkbox>
+          <v-chip
+            v-if="item.Dienstag != ''"
+            :color="getColor(item.Dienstag)"
+            dark
+          >
+            {{ item.Dienstag }}
+          </v-chip>
         </template>
         <template v-slot:[`item.Mittwoch`]="{ item }">
-          <v-simple-checkbox v-model="item.Mittwoch" :ripple="false">
-          </v-simple-checkbox>
+          <v-chip
+            v-if="item.Mittwoch != ''"
+            :color="getColor(item.Mittwoch)"
+            dark
+          >
+            {{ item.Mittwoch }}
+          </v-chip>
         </template>
         <template v-slot:[`item.Donnerstag`]="{ item }">
-          <v-simple-checkbox v-model="item.Donnerstag" :ripple="false">
-          </v-simple-checkbox>
+          <v-chip
+            v-if="item.Donnerstag != ''"
+            :color="getColor(item.Donnerstag)"
+            dark
+          >
+            {{ item.Donnerstag }}
+          </v-chip>
         </template>
         <template v-slot:[`item.Freitag`]="{ item }">
-          <v-simple-checkbox v-model="item.Freitag" :ripple="false">
-          </v-simple-checkbox>
+          <v-chip
+            v-if="item.Freitag != ''"
+            :color="getColor(item.Freitag)"
+            dark
+          >
+            {{ item.Freitag }}
+          </v-chip>
         </template>
       </v-data-table>
     </v-layout>
@@ -96,65 +110,14 @@ export default {
 
   data() {
     return {
-      inputDialog: false,
       typs: ["Vegan", "Vegetarisch", "Glutenfrei", "Laktosefrei"],
-      nema: ["Kevin", "Michael", "Hans", "Stephan"],
-      inputRules: [(v) => !!v || "Schreib was rein"],
-      normal: {
-        Montag: 8,
-        Dienstag: 8,
-        Mittwoch: 8,
-        Donnerstag: 8,
-        Freitag: 8,
-      },
       aktuelleWoche: {
         id: "",
         name: "",
       },
       wochen: [],
-      wochenBestellung: [],
-      bestellungGesamt: [
-        /* {
-          Name: "Normal",
-          Montag: 0,
-          Dienstag: 0,
-          Mittwoch: 0,
-          Donnerstag: 0,
-          Freitag: 0,
-        },
-        {
-          Name: "Vegetarisch",
-          Montag: 0,
-          Dienstag: 0,
-          Mittwoch: 0,
-          Donnerstag: 0,
-          Freitag: 0,
-        },
-        {
-          Name: "Vegan",
-          Montag: 0,
-          Dienstag: 0,
-          Mittwoch: 0,
-          Donnerstag: 0,
-          Freitag: 0,
-        },
-        {
-          Name: "Glutenfrei",
-          Montag: 0,
-          Dienstag: 0,
-          Mittwoch: 0,
-          Donnerstag: 0,
-          Freitag: 0,
-        },
-        {
-          Name: "Laktosefrei",
-          Montag: 0,
-          Dienstag: 0,
-          Mittwoch: 0,
-          Donnerstag: 0,
-          Freitag: 0,
-        }, */
-      ],
+      spezialBestellungen: [],
+      bestellungGesamt: [],
       spezialheader: [
         { text: "Name", value: "Name" },
         { text: "Montag", value: "Montag" },
@@ -189,9 +152,9 @@ export default {
         temp[1] = response.data.data.Vegetarisch;
         temp[2] = response.data.data.Vegan;
         temp[3] = response.data.data.Glutenfrei;
-        temp[4] = response.data.data.Lactosefrei;
+        temp[4] = response.data.data.Laktosefrei;
         this.bestellungGesamt = temp;
-        console.log(response.data.data);
+        this.spezialBestellungen = response.data.data.teilnehmer;
         console.log(response.status);
         console.log(response.data.message);
       });
@@ -201,12 +164,9 @@ export default {
     getColor(Essen) {
       if (Essen == "Vegan") return "green";
       else if (Essen == "Vegetarisch") return "blue";
-      else if (Essen == "Laktosefrei") return "orange";
+      else if (Essen == "Laktosefrei") return "#ffa014";
       else if (Essen == "Glutenfrei") return "#FBC02D";
-    },
-    speichern() {
-      console.log("Gespeichert");
-      this.inputDialog = false;
+      else if (Essen == "") return "white";
     },
   },
 };

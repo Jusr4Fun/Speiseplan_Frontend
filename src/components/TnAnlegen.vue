@@ -2,8 +2,8 @@
   <v-container>
     <v-data-table
       :headers="headers"
-      :items="teilnehmer"
       :search="search"
+      :items="teilnehmer"
       hide-default-footer
       sort-by="calories"
       class="elevation-10"
@@ -45,6 +45,7 @@
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         v-model="editedItem.abteilung"
+                        disabled
                         label="Abteilung"
                       ></v-text-field>
                     </v-col>
@@ -97,20 +98,20 @@
           </v-icon>
         </v-hover>
       </template>
-      <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize"> Reset </v-btn>
-      </template>
     </v-data-table>
   </v-container>
 </template>
 
 <script>
+import * as API from "@/services/API";
+import store from "@/store/index";
+
 export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
     search: "",
-    formTitle: "dummydata",
+    formTitle: "Teilnehmer bearbeiten",
     items: [
       {
         name: "",
@@ -138,21 +139,24 @@ export default {
       name: "",
       abteilung: "",
     },
+    teilnehmer: [],
+    user: {},
   }),
-  setup() {
-    return {
-      teilnehmer: [
-        {
-          name: "Kevin Ba.",
-          abteilung: "FISI",
-        },
-        {
-          name: "Michael Se.",
-          abteilung: "FISI",
-        },
-      ],
-    };
+
+  created() {
+    this.user = store.getters["auth/authUser"];
   },
+
+  beforeMount() {
+    API.apiClient
+      .get(`/abteilungTeilnehmer=${this.user.abteilung_id}`)
+      .then((response) => {
+        this.teilnehmer = response.data.data;
+        console.log(response.status);
+        console.log(response.data.message);
+      });
+  },
+
   methods: {
     close() {
       this.dialog = false;

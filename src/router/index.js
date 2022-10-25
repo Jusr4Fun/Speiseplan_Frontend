@@ -2,18 +2,18 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import store from "@/store/index";
 /* import { component } from "vue/types/umd"; */
-import BestellungComponent from "../components/BestellungComponent.vue";
-import IndiviUserVerwaltung from "../components/IndividuelleUserVerwaltung.vue";
-import GesamtBestell from "../components/GesammelteBestellungen.vue";
-import LoginDialog from "../components/LoginDialog.vue";
-import HomeDash from "../components/HomeDashboard.vue";
-import UserVerwaltung from "../components/UserVerwaltung.vue";
-import TnAnlegen from "../components/TnAnlegen.vue";
+import BestellungChildView from "../views/child_view/BestellungChildView.vue";
+import IndividuellUserVerwaltungChildView from "../views/child_view/IndividuellUserVerwaltungChildView.vue";
+import GesamtBestellungChildView from "../views/child_view/GesamtBestellungChildView.vue";
+import LoginChildView from "../views/child_view/LoginChildView.vue";
+import HomeDashboardChildView from "../views/child_view/HomeDashboardChildView.vue";
+import AdminUserVerwaltungChildView from "../views/child_view/AdminUserVerwaltungChildView.vue";
+import TeilnehmerChildView from "../views/child_view/TeilnehmerChildView.vue";
 import MainView from "../views/MainView.vue";
-import AboutComponent from "../components/AboutComponent.vue";
+import AboutChildView from "../views/child_view/AboutChildView.vue";
 import AnmeldungView from "../views/AnmeldungView.vue";
-import PasswortReset from "../components/PasswortReset.vue";
-import SupportComponent from "../components/SupportComponent.vue";
+import PasswortResetChildView from "../views/child_view/PasswortResetChildView.vue";
+import SupportChildView from "../views/child_view/SupportChildView.vue";
 import roleCheck from "./roleCheck";
 import Nutzer from "../middleware/nutzer";
 import Koch from "../middleware/koch";
@@ -30,7 +30,7 @@ const MainPages = {
     {
       path: "/Dashboard",
       name: "Dashboard",
-      component: HomeDash,
+      component: HomeDashboardChildView,
       meta: {
         icon: "mdi-home",
         title: "Dashboard",
@@ -51,7 +51,7 @@ const MainPages = {
     {
       path: "/bestellungen",
       name: "Bestellungen",
-      component: BestellungComponent,
+      component: BestellungChildView,
       meta: {
         icon: "mdi-basket",
         title: "Bestellungen",
@@ -72,7 +72,7 @@ const MainPages = {
     {
       path: "/GesamtBestellungen",
       name: "Gesamt Bestellungen",
-      component: GesamtBestell,
+      component: GesamtBestellungChildView,
       meta: {
         icon: "mdi-basket",
         title: "Gesamt Bestellungen",
@@ -93,7 +93,7 @@ const MainPages = {
     {
       path: "/Teilnehmer",
       name: "Teilnehmer",
-      component: TnAnlegen,
+      component: TeilnehmerChildView,
       meta: {
         icon: "mdi-account-group",
         title: "Nutzer",
@@ -114,7 +114,7 @@ const MainPages = {
     {
       path: "/BenutzerAdmin",
       name: "Gesamt Nutzer Verwaltung",
-      component: UserVerwaltung,
+      component: AdminUserVerwaltungChildView,
       meta: {
         icon: "mdi-account-group",
         title: "Gesamt Nutzer Verwaltung",
@@ -135,7 +135,7 @@ const MainPages = {
     {
       path: "/Benutzer",
       name: "Benutzerverwaltung",
-      component: IndiviUserVerwaltung,
+      component: IndividuellUserVerwaltungChildView,
       meta: {
         icon: "mdi-account-group",
         title: "Benutzerverwaltung",
@@ -156,7 +156,7 @@ const MainPages = {
     {
       path: "/Support",
       name: "Support",
-      component: SupportComponent,
+      component: SupportChildView,
       meta: {
         icon: "mdi-face-agent",
         title: "Support",
@@ -176,7 +176,7 @@ const MainPages = {
     {
       path: "/Ueber",
       name: "Über",
-      component: AboutComponent,
+      component: AboutChildView,
       meta: {
         icon: "mdi-information",
         title: "Über",
@@ -204,7 +204,7 @@ const AuthPages = {
     {
       path: "/login",
       name: "Anmeldung",
-      component: LoginDialog,
+      component: LoginChildView,
       meta: {
         title: "Login",
         metaTags: [
@@ -222,7 +222,7 @@ const AuthPages = {
     {
       path: "/PasswortReset",
       name: "Passwort zurücksetzen",
-      component: PasswortReset,
+      component: PasswortResetChildView,
       meta: {
         title: "Passwort zurücksetzen",
         metaTags: [

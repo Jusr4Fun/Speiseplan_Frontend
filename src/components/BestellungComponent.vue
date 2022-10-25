@@ -4,7 +4,7 @@
       <v-btn icon>
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
-      <div>KW 30 2022</div>
+      <div>{{ aktuelleWoche.name }}</div>
       <v-btn icon>
         <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
@@ -18,21 +18,24 @@
         :headers="normalHeader"
         hide-default-footer
         disable-sort
-        ><template v-slot:top>
+      >
+        <template v-slot:top>
           <v-toolbar flat>
             <v-toolbar-title
               class="d-flex align-center text-h5 font-weight-bold ma-2"
-              >Normale Bestellungen</v-toolbar-title
-            ></v-toolbar
-          ></template
-        >
+            >
+              Normale Bestellungen
+            </v-toolbar-title>
+          </v-toolbar>
+        </template>
         <template v-slot:[`item.Montag`]="{ item }">
           <v-text-field
             class="justify-center"
             min="0"
             type="number"
             v-model="item.Montag"
-          ></v-text-field>
+          >
+          </v-text-field>
         </template>
         <template v-slot:[`item.Dienstag`]="{ item }"
           ><v-text-field
@@ -74,13 +77,15 @@
         :ripple="false"
         no-gutters
         :headers="header"
-        :items="specialBestellung"
+        :items="spezialBestellung"
         :items-per-page="5"
         class="elevation-1 ma-2"
         :loading="loadingSpecial"
         loading-text="Laden... Bitte Warten"
         no-data-text="noch keine Daten Eingetragen"
         hide-default-footer
+        mobile-breakpoint="875"
+        disable-sort
       >
         <template v-slot:top>
           <v-toolbar flat>
@@ -90,30 +95,53 @@
             ></v-toolbar
           ></template
         >
-        <template v-slot:[`item.Essen`]="{ item }">
-          <v-chip :color="getColor(item.Essen)" dark>
-            {{ item.Essen }}
-          </v-chip>
+        <template v-slot:[`item.Name`]="{ item }">
+          {{ item.Name }}
         </template>
         <template v-slot:[`item.Montag`]="{ item }">
-          <v-simple-checkbox v-model="item.Montag" :ripple="false">
-          </v-simple-checkbox>
+          <v-select v-model="item.Montag" :items="typs">
+            <template #selection="{ item }">
+              <v-chip v-if="item != ''" :color="getColor(item)">
+                {{ item }}
+              </v-chip>
+            </template>
+          </v-select>
         </template>
         <template v-slot:[`item.Dienstag`]="{ item }">
-          <v-simple-checkbox v-model="item.Dienstag" :ripple="false">
-          </v-simple-checkbox>
+          <v-select v-model="item.Dienstag" :items="typs">
+            <template #selection="{ item }">
+              <v-chip v-if="item != ''" :color="getColor(item)">
+                {{ item }}
+              </v-chip>
+            </template>
+          </v-select>
         </template>
         <template v-slot:[`item.Mittwoch`]="{ item }">
-          <v-simple-checkbox v-model="item.Mittwoch" :ripple="false">
-          </v-simple-checkbox>
+          <v-select v-model="item.Mittwoch" :items="typs">
+            <template #selection="{ item }">
+              <v-chip v-if="item != ''" :color="getColor(item)">
+                {{ item }}
+              </v-chip>
+            </template>
+          </v-select>
         </template>
         <template v-slot:[`item.Donnerstag`]="{ item }">
-          <v-simple-checkbox v-model="item.Donnerstag" :ripple="false">
-          </v-simple-checkbox>
+          <v-select v-model="item.Donnerstag" :items="typs">
+            <template #selection="{ item }">
+              <v-chip v-if="item != ''" :color="getColor(item)">
+                {{ item }}
+              </v-chip>
+            </template>
+          </v-select>
         </template>
         <template v-slot:[`item.Freitag`]="{ item }">
-          <v-simple-checkbox v-model="item.Freitag" :ripple="false">
-          </v-simple-checkbox>
+          <v-select v-model="item.Freitag" :items="typs">
+            <template #selection="{ item }">
+              <v-chip v-if="item != ''" :color="getColor(item)">
+                {{ item }}
+              </v-chip>
+            </template>
+          </v-select>
         </template>
       </v-data-table>
     </v-layout>
@@ -139,7 +167,7 @@
               <v-icon dark> mdi-plus </v-icon>
             </v-btn>
           </template>
-          <template v-slot:default="dialog">
+          <template v-slot-model="dialog">
             <v-card>
               <v-toolbar color="primary" dark
                 >Neue Spezial Bestellung</v-toolbar
@@ -148,19 +176,74 @@
                 <v-autocomplete
                   label="Teilnehmer"
                   required
+                  v-model="editedItem.Name"
                   :rules="inputRules"
-                  :items="nema"
+                  :items="teilnehmer"
                 ></v-autocomplete>
                 <v-autocomplete
-                  label="Essen"
+                  label="Montag"
                   required
-                  :rules="inputRules"
+                  v-model="editedItem.Montag"
                   :items="typs"
-                ></v-autocomplete>
+                >
+                  <template #selection="{ item }">
+                    <v-chip v-if="item != ''" :color="getColor(item)">
+                      {{ item }}
+                    </v-chip>
+                  </template>
+                </v-autocomplete>
+                <v-autocomplete
+                  label="Dienstag"
+                  required
+                  v-model="editedItem.Dienstag"
+                  :items="typs"
+                >
+                  <template #selection="{ item }">
+                    <v-chip v-if="item != ''" :color="getColor(item)">
+                      {{ item }}
+                    </v-chip>
+                  </template>
+                </v-autocomplete>
+                <v-autocomplete
+                  label="Mittwoch"
+                  required
+                  v-model="editedItem.Mittwoch"
+                  :items="typs"
+                >
+                  <template #selection="{ item }">
+                    <v-chip v-if="item != ''" :color="getColor(item)">
+                      {{ item }}
+                    </v-chip>
+                  </template>
+                </v-autocomplete>
+                <v-autocomplete
+                  label="Donnerstag"
+                  required
+                  v-model="editedItem.Donnerstag"
+                  :items="typs"
+                >
+                  <template #selection="{ item }">
+                    <v-chip v-if="item != ''" :color="getColor(item)">
+                      {{ item }}
+                    </v-chip>
+                  </template>
+                </v-autocomplete>
+                <v-autocomplete
+                  label="Freitag"
+                  required
+                  v-model="editedItem.Freitag"
+                  :items="typs"
+                >
+                  <template #selection="{ item }">
+                    <v-chip v-if="item != ''" :color="getColor(item)">
+                      {{ item }}
+                    </v-chip>
+                  </template>
+                </v-autocomplete>
               </v-card-text>
               <v-card-actions class="justify-end">
                 <v-btn text @click="speichern">Anlegen</v-btn>
-                <v-btn text @click="dialog.value = false">Close</v-btn>
+                <v-btn text @click="close">Close</v-btn>
               </v-card-actions>
             </v-card>
           </template>
@@ -180,6 +263,8 @@
 </template>
 
 <script>
+import store from "@/store/index";
+import * as API from "@/services/API";
 export default {
   name: "Home-View",
 
@@ -187,8 +272,24 @@ export default {
     return {
       inputDialog: false,
       loadingSpecial: true,
-      typs: ["Vegan", "Vegetarisch", "Glutenfrei", "Laktosefrei"],
-      nema: ["Kevin", "Michael", "Hans", "Stephan"],
+      typs: ["Vegan", "Vegetarisch", "Glutenfrei", "Laktosefrei", ""],
+      teilnehmer: [],
+      defaultItem: {
+        Name: "",
+        Montag: "",
+        Dienstag: "",
+        Mittwoch: "",
+        Donnerstag: "",
+        Freitag: "",
+      },
+      editedItem: {
+        Name: "",
+        Montag: "",
+        Dienstag: "",
+        Mittwoch: "",
+        Donnerstag: "",
+        Freitag: "",
+      },
       inputRules: [(v) => !!v || "Schreib was rein"],
       normalHeader: [
         { text: "Montag", value: "Montag" },
@@ -197,20 +298,50 @@ export default {
         { text: "Donnerstag", value: "Donnerstag" },
         { text: "Freitag", value: "Freitag" },
       ],
-      normal: [
-        { Montag: 8, Dienstag: 8, Mittwoch: 8, Donnerstag: 8, Freitag: 8 },
-      ],
-      specialBestellung: [],
+      normal: [],
+      spezialBestellung: [],
+      aktuelleWoche: {},
       header: [
-        { text: "Name", value: "Name" },
-        { text: "Essen", value: "Essen" },
-        { text: "Montag", value: "Montag" },
-        { text: "Dienstag", value: "Dienstag" },
-        { text: "Mittwoch", value: "Mittwoch" },
-        { text: "Donnerstag", value: "Donnerstag" },
-        { text: "Freitag", value: "Freitag" },
+        { text: "Name", value: "Name", width: "15%" },
+        { text: "Montag", value: "Montag", width: "15%" },
+        { text: "Dienstag", value: "Dienstag", width: "15%" },
+        { text: "Mittwoch", value: "Mittwoch", width: "15%" },
+        { text: "Donnerstag", value: "Donnerstag", width: "15%" },
+        { text: "Freitag", value: "Freitag", width: "15%" },
       ],
+      user: {},
     };
+  },
+  beforeMount() {
+    this.user = Object.assign({}, store.getters["auth/authUser"]);
+    API.apiClient.get(`/wochen`).then((response) => {
+      console.log(response.status);
+      console.log(response.data.message);
+    });
+    this.aktuelleWoche = { id: 1, name: "KW 36 2022" };
+    API.apiClient
+      .get(
+        `/abteilung/${this.user.abteilung_id}/woche/${this.aktuelleWoche.id}`
+      )
+      .then((response) => {
+        console.log(response.status);
+        if (response.status == 204) {
+          console.log(response.statusText);
+        } else {
+          console.log(response.data.message);
+        }
+        console.log(response.data.data);
+        this.convertResponse(response.data.data);
+        this.spezialBestellung = response.data.data.spezial_essen;
+      });
+    API.apiClient
+      .get(`/abteilungTeilnehmerName=${this.user.abteilung_id}`)
+      .then((response) => {
+        this.teilnehmer = response.data.data;
+        console.log(this.teilnehmer);
+        console.log(response.status);
+        console.log(response.data.message);
+      });
   },
   mounted() {
     this.fillSpecialBestellung();
@@ -221,14 +352,30 @@ export default {
       else if (Essen == "Vegetarisch") return "blue";
       else if (Essen == "Laktosefrei") return "orange";
       else if (Essen == "Glutenfrei") return "#FBC02D";
+      else if (Essen == "") return "white";
     },
     speichern() {
       console.log("Gespeichert");
+      this.spezialBestellung.push(this.editedItem);
+      this.inputDialog = false;
+    },
+    close() {
+      this.editedItem = this.defaultItem;
       this.inputDialog = false;
     },
     fillSpecialBestellung() {
-      this.specialBestellung = [];
       this.loadingSpecial = false;
+    },
+    convertResponse(normal) {
+      var temp = [];
+      var temp2 = {};
+      temp2.Montag = normal.montag_normal;
+      temp2.Dienstag = normal.dienstag_normal;
+      temp2.Mittwoch = normal.mittwoch_normal;
+      temp2.Donnerstag = normal.donnerstag_normal;
+      temp2.Freitag = normal.freitag_normal;
+      temp[0] = temp2;
+      this.normal = temp;
     },
   },
 };

@@ -35,18 +35,21 @@ export const actions = {
         commit("SET_ERROR", console.log(error.data));
       });
   },
-  getAuthUser({ commit }) {
+  async getAuthUser({ commit }) {
     commit("SET_LOADING", true);
-    return AuthService.getAuthUser()
+    var test = false;
+    await AuthService.getAuthUser()
       .then((response) => {
         commit("SET_USER", response.data.data);
         commit("SET_LOADING", false);
+        test = true;
       })
       .catch((error) => {
         commit("SET_LOADING", false);
         commit("SET_USER", null);
         commit("SET_ERROR", console.log(error.data));
       });
+    return test;
   },
 };
 

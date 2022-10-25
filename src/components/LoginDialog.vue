@@ -57,7 +57,29 @@ export default {
     };
   },
   methods: {
-    login() {
+    async login() {
+      const payload = {
+        email: this.email,
+        password: this.password,
+      };
+      this.error = null;
+      try {
+        await AuthService.login(payload);
+        var authUser = await this.$store.dispatch("auth/getAuthUser");
+        if (authUser) {
+          this.$router.push("/dashboard");
+        } else {
+          const error = Error(
+            "Unable to fetch user after login, check your API settings."
+          );
+          error.name = "Fetch User";
+          throw error;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    /* login() {
       const payload = {
         email: this.email,
         password: this.password,
@@ -65,7 +87,7 @@ export default {
       AuthService.login(payload)
         .then(() => this.$router.push("/dashboard"))
         .catch((error) => console.log(error.data));
-    },
+    }, */
   },
 };
 </script>

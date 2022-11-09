@@ -7,7 +7,7 @@
           :items="users"
           disable-pagination
           hide-default-footer
-          sort-by="name"
+          sort-by="abteilung"
           class="elevation-10 ma-4"
           loading-text="Lädt... Bitte warten"
           no-data-text="noch keine Daten Eingetragen"
@@ -54,6 +54,15 @@
                           ></v-autocomplete>
                         </v-col>
                       </v-row>
+                      <v-row>
+                        <v-col cols="12">
+                          <v-autocomplete
+                            :items="rollen"
+                            v-model="editedItem.role_id"
+                            label="Rolle"
+                          ></v-autocomplete>
+                        </v-col>
+                      </v-row>
                       <v-row v-if="password_enable == true">
                         <v-col cols="12">
                           <v-text-field
@@ -82,6 +91,39 @@
                     <v-btn color="blue darken-1" text @click="save">
                       Speichern
                     </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+              <v-dialog
+                v-model="dialogEditPasswort"
+                max-width="800px"
+                persistent
+              >
+                <v-card>
+                  <v-card-title class="text-h5 justify-center"
+                    >Nutzer Passwort ändern</v-card-title
+                  >
+                  <v-card-text>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="12">
+                          <v-text-field
+                            v-model="editedItem.password"
+                            label="Passwort"
+                          ></v-text-field>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="closeEditPasswort"
+                      >Abbrechen</v-btn
+                    >
+                    <v-btn color="blue darken-1" text @click="savePasswort"
+                      >Speichern</v-btn
+                    >
+                    <v-spacer></v-spacer>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -117,6 +159,16 @@
             </v-hover>
             <v-hover v-slot="{ hover }">
               <v-icon
+                class="mr-2"
+                @click="editPasswort(item)"
+                :style="{ color: hover ? '#96c21c' : '' }"
+              >
+                mdi-form-textbox-password
+              </v-icon>
+            </v-hover>
+            <v-hover v-slot="{ hover }">
+              <v-icon
+                class="mr-2"
                 @click="deleteItem(item)"
                 :style="{ color: hover ? 'red' : '' }"
               >
@@ -137,6 +189,7 @@ export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
+    dialogEditPasswort: false,
     password_enable: true,
     headers: [
       {
@@ -145,25 +198,30 @@ export default {
         sortable: false,
         value: "name",
       },
+      { text: "Rolle", value: "role" },
       { text: "Abteilung", value: "abteilung" },
-      { text: "E-Mail", value: "email" },
+      { text: "E-Mail", value: "email", sortable: false },
       { text: "", align: "end", value: "actions", sortable: false },
     ],
     response: [],
     users: [],
     abteilungen: [],
+    rollen: [],
     editedIndex: -1,
     editedItem: {
       id: "",
       name: "",
       abteilung_id: "",
+      role_id: "",
       password: "",
       email: "",
     },
     defaultItem: {
       id: 0,
       name: "",
-      abteilung: "",
+      abteilung_id: "",
+      role_id: "",
+      password: "",
       email: "",
     },
   }),
@@ -200,6 +258,11 @@ export default {
       console.log(response.status);
       console.log(response.data.message);
     });
+    API.apiClient.get(`/RolleRoleID`).then((response) => {
+      this.rollen = response.data.data;
+      console.log(response.status);
+      console.log(response.data.message);
+    });
   },
 
   methods: {
@@ -209,8 +272,13 @@ export default {
           this.editedItem.abteilung_id = abteilung.id;
         }
       }
+      for (const rolle of this.rollen) {
+        if (this.editedItem.role_id == rolle.text) {
+          this.editedItem.role_id = rolle.id;
+        }
+      }
       API.apiClient
-        .post(`/users`, this.editedItem)
+        .post(`/storeUsers`, this.editedItem)
         .then((response) => {
           console.log(response.status);
           console.log(response.data.message);
@@ -218,6 +286,11 @@ export default {
           for (const abteilung of this.abteilungen) {
             if (this.editedItem.abteilung_id == abteilung.id) {
               this.editedItem.abteilung = abteilung.text;
+            }
+          }
+          for (const rolle of this.rollen) {
+            if (this.editedItem.role_id == rolle.id) {
+              this.editedItem.role = rolle.text;
             }
           }
           this.users.push(this.editedItem);
@@ -231,7 +304,7 @@ export default {
 
     deleteUser(id) {
       API.apiClient
-        .delete(`/delete=${id}`)
+        .delete(`/deleteUser=${id}`)
         .then((response) => {
           console.log(response.status);
           console.log(response.data.message);
@@ -244,7 +317,26 @@ export default {
         });
     },
 
+    updatePasswort() {
+      API.apiClient
+        .post(`/updatePasswort`, this.editedItem)
+        .then((response) => {
+          console.log(response.status);
+          console.log(response.data.message);
+          this.closeEditPasswort();
+        })
+        .catch((error) => {
+          console.log(error);
+          this.closeEditPasswort();
+        });
+    },
+
     updateUser() {
+      for (const rolle of this.rollen) {
+        if (this.editedItem.role_id == rolle.text) {
+          this.editedItem.role_id = rolle.id;
+        }
+      }
       for (const abteilung of this.abteilungen) {
         if (this.editedItem.abteilung_id == abteilung.text) {
           this.editedItem.abteilung_id = abteilung.id;
@@ -258,6 +350,11 @@ export default {
           for (const abteilung of this.abteilungen) {
             if (this.editedItem.abteilung_id == abteilung.id) {
               this.editedItem.abteilung = abteilung.text;
+            }
+          }
+          for (const rolle of this.rollen) {
+            if (this.editedItem.role_id == rolle.id) {
+              this.editedItem.role = rolle.text;
             }
           }
           Object.assign(this.users[this.editedIndex], this.editedItem);
@@ -320,6 +417,24 @@ export default {
       } else {
         this.updateUser();
       }
+    },
+
+    editPasswort(item) {
+      this.editedIndex = this.users.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogEditPasswort = true;
+    },
+
+    closeEditPasswort() {
+      this.dialogEditPasswort = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
+    savePasswort() {
+      this.updatePasswort();
     },
   },
 };

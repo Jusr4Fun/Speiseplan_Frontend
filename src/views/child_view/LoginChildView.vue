@@ -2,7 +2,7 @@
   <v-container fill-height fluid>
     <v-layout align-center justify-center>
       <v-flex xs12 sm8 md4>
-        <v-card class="elevation-12">
+        <v-card class="elevation-12" v-on:keyup.enter="login">
           <v-toolbar dark color="primary">
             <v-toolbar-title>Login</v-toolbar-title>
           </v-toolbar>
@@ -26,11 +26,26 @@
                 :rules="[rules.required, rules.min]"
                 :type="show1 ? 'text' : 'password'"
               ></v-text-field>
+              <v-alert
+                transition="fab-transition"
+                v-model="check"
+                color="red"
+                class="mt-4"
+                dismissible
+                elevation="10"
+                type="error"
+                >Fehler! Eingabe Überprüfen</v-alert
+              >
             </v-form>
           </v-card-text>
-          <v-card-actions>
+          <v-card-actions class="d-flex align-center">
+            <v-btn class="ma-4" color="primary" :to="'/' + 'PasswortReset'"
+              >Passwort Zurücksetzen</v-btn
+            >
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="login">Login</v-btn>
+            <v-btn class="ma-4" color="primary" @click="login" x-large
+              >Login</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -44,6 +59,7 @@ export default {
   name: "LoginDialog",
   data() {
     return {
+      check: false,
       show1: false,
       show2: true,
       show3: false,
@@ -51,7 +67,7 @@ export default {
       email: "",
       password: "",
       rules: {
-        required: (value) => !!value || "Required.",
+        required: (value) => !!value || "Benötigt.",
         min: (v) => v.length >= 8 || "Min 8 characters",
       },
     };
@@ -66,7 +82,9 @@ export default {
       try {
         await AuthService.login(payload);
         var authUser = await this.$store.dispatch("auth/getAuthUser");
+        console.log(authUser);
         if (authUser) {
+          this.check = false;
           this.$router.push("/dashboard");
         } else {
           const error = Error(
@@ -76,6 +94,7 @@ export default {
           throw error;
         }
       } catch (error) {
+        this.check = true;
         console.log(error);
       }
     },

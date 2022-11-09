@@ -1,5 +1,25 @@
 <template>
   <v-container>
+    <v-row class="justify-center">
+      <v-alert
+        transition="fab-transition"
+        v-model="succesalert"
+        color="success"
+        dismissible
+        elevation="24"
+        type="success"
+        >Änderung Gespeichert</v-alert
+      >
+      <v-alert
+        transition="fab-transition"
+        v-model="erroralert"
+        color="red"
+        dismissible
+        elevation="24"
+        type="error"
+        >Fehler! Eingabe Überprüfen</v-alert
+      >
+    </v-row>
     <v-row class="text-h5 justify-center">
       <v-card width="600" class="ma-4" elevation="10">
         <v-card-title class="text-h5 justify-center">
@@ -65,6 +85,9 @@ import * as API from "@/services/API";
 import store from "@/store/index";
 export default {
   data: () => ({
+    succesalert: false,
+    erroralert: false,
+    check: false,
     user: {},
     password: null,
     editedItem: {
@@ -72,6 +95,7 @@ export default {
       name: "",
       abteilung: "",
       abteilung_id: "",
+      role_id: "",
       email: "",
     },
   }),
@@ -92,16 +116,32 @@ export default {
     },
 
     updateUser() {
+      console.log(Date.now());
       API.apiClient
         .post(`/updateUser`, this.editedItem)
         .then((response) => {
           console.log(response.status);
           console.log(response.data.message);
+          this.checkStatus(true);
         })
         .catch((error) => {
           console.log(error);
+          this.checkStatus(false);
         });
     },
+
+    checkStatus(teststatus) {
+      if (teststatus) {
+        this.succesalert = true;
+      } else {
+        this.erroralert = true;
+      }
+    },
+
+    /* alertsClose() {
+      this.succesalert = false;
+      this.erroralert = false;
+    }, */
   },
 };
 </script>

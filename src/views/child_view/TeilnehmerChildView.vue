@@ -5,8 +5,8 @@
       :search="search"
       :items="teilnehmer"
       hide-default-footer
-      sort-by="calories"
       class="elevation-10"
+      sort-by="name"
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -70,7 +70,7 @@
                 <v-btn color="blue darken-1" text @click="close">
                   Schließen
                 </v-btn>
-                <v-btn color="blue darken-1" text @click="deleteItemConfirm">
+                <v-btn color="blue darken-1" text @click="deleteTeilnehmer">
                   OK
                 </v-btn>
                 <v-spacer></v-spacer>
@@ -91,6 +91,7 @@
         </v-hover>
         <v-hover v-slot="{ hover }">
           <v-icon
+            class="mr-2"
             @click="deleteItem(item)"
             :style="{ color: hover ? 'red' : '' }"
           >
@@ -108,36 +109,31 @@ import store from "@/store/index";
 
 export default {
   data: () => ({
+    check: false,
     dialog: false,
     dialogDelete: false,
     search: "",
     formTitle: "Teilnehmer bearbeiten",
-    items: [
-      {
-        name: "",
-        abteilung: "",
-      },
-      {
-        name: "",
-        abteilung: "",
-      },
-      {
-        name: "",
-        abteilung: "",
-      },
-    ],
     headers: [
-      { text: "Name", value: "name" },
-      { text: "Abteilung", value: "abteilung" },
-      { text: "", value: "actions", sortable: false },
+      { text: "Name", value: "name", sortable: false },
+      { text: "Abteilung", value: "abteilung", sortable: false },
+      {
+        text: "",
+        value: "actions",
+        sortable: false,
+        align: "end",
+      },
     ],
+    editedIndex: -1,
     defaultItem: {
       name: "",
       abteilung: "",
+      id: "",
     },
     editedItem: {
       name: "",
       abteilung: "",
+      id: "",
     },
     teilnehmer: [],
     user: {},
@@ -145,6 +141,10 @@ export default {
 
   created() {
     this.user = store.getters["auth/authUser"];
+    this.defaultItem.abteilungs_id = this.user.abteilung_id;
+    this.editedItem.abteilungs_id = this.user.abteilung_id;
+    this.defaultItem.abteilung = this.user.abteilung;
+    this.editedItem.abteilung = this.user.abteilung;
   },
 
   beforeMount() {
@@ -173,8 +173,56 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
-    save() {},
-    deleteItemConfirm() {},
+    save() {
+      if (this.editedItem.id == "") {
+        this.createTeilnehmer();
+      } else {
+        this.updateTeilnehmer();
+      }
+    },
+    deleteTeilnehmer() {
+      API.apiClient
+        .delete(`/deleteTeilnehmer=${this.editedItem.id}`)
+        .then((response) => {
+          console.log(response.status);
+          console.log(response.data.message);
+          this.teilnehmer.splice(this.editedIndex, 1);
+          this.close();
+        })
+        .catch((error) => {
+          console.log(error);
+          this.close();
+        });
+    },
+    createTeilnehmer() {
+      API.apiClient
+        .post(`/storeTeilnehmer`, this.editedItem)
+        .then((response) => {
+          console.log(response.status);
+          console.log(response.data.message);
+          this.editedItem.id = response.data.data.id;
+          this.teilnehmer.push(this.editedItem);
+          this.close();
+        })
+        .catch((error) => {
+          console.log(error);
+          this.close();
+        });
+    },
+    updateTeilnehmer() {
+      API.apiClient
+        .post(`/updateTeilnehmer`, this.editedItem)
+        .then((response) => {
+          console.log(response.status);
+          console.log(response.data.message);
+          Object.assign(this.teilnehmer[this.editedIndex], this.editedItem);
+          this.close();
+        })
+        .catch((error) => {
+          console.log(error);
+          this.close();
+        });
+    },
   },
 };
 </script>

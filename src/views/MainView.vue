@@ -42,7 +42,17 @@
         $route.meta.title || "Default title"
       }}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-menu bottom min-width="200px" rounded offset-y class="ma-2">
+      <v-btn v-if="show == false" :to="'/' + 'login'" color="secondary"
+        >Anmelden</v-btn
+      >
+      <v-menu
+        bottom
+        min-width="200px"
+        rounded
+        offset-y
+        class="ma-2"
+        v-if="show == true"
+      >
         <template v-slot:activator="{ on }">
           <v-btn
             fab
@@ -91,34 +101,51 @@
 <script>
 import Admin from "../middleware/admin";
 import store from "@/store/index";
+//import * as API from "@/services/API";
 
 export default {
   name: "MainApp",
-  mounted() {
+  async created() {
+    await this.getWochen();
     this.$router.options.routes.forEach((route) => {
-      if (route.name == "Main") {
-        route.children.forEach((childroute) => {
-          if (
-            typeof childroute.meta.middleware == "undefined" ||
-            Admin() == store.getters["auth/role"]
-          ) {
-            this.items.push({
-              name: childroute.name,
-              path: childroute.path,
-              icon: childroute.meta.icon,
-            });
-          } else {
-            for (const role of childroute.meta.middleware) {
-              if (role() == store.getters["auth/role"]) {
-                this.items.push({
-                  name: childroute.name,
-                  path: childroute.path,
-                  icon: childroute.meta.icon,
-                });
+      if (store.getters["auth/authUser"]) {
+        if (route.name == "Main") {
+          route.children.forEach((childroute) => {
+            if (
+              typeof childroute.meta.middleware == "undefined" ||
+              Admin() == store.getters["auth/role"]
+            ) {
+              this.items.push({
+                name: childroute.name,
+                path: childroute.path,
+                icon: childroute.meta.icon,
+              });
+            } else {
+              for (const role of childroute.meta.middleware) {
+                if (role() == store.getters["auth/role"]) {
+                  this.items.push({
+                    name: childroute.name,
+                    path: childroute.path,
+                    icon: childroute.meta.icon,
+                  });
+                }
               }
             }
-          }
-        });
+          });
+        }
+      } else {
+        this.show = false;
+        if (route.name == "Main") {
+          route.children.forEach((childroute) => {
+            if (!childroute.meta.requiresAuth) {
+              this.items.push({
+                name: childroute.name,
+                path: childroute.path,
+                icon: childroute.meta.icon,
+              });
+            }
+          });
+        }
       }
     });
     this.user = Object.assign({}, store.getters["auth/authUser"]);
@@ -131,9 +158,14 @@ export default {
     this.user.initials = intialSplit[0][0] + intialSplit[1][0];
   },
   data: () => ({
+    show: true,
     drawer: null,
     usercard: null,
     expand: false,
+    temp: {
+      time: new Date().getTime(),
+      offset: new Date().getTimezoneOffset(),
+    },
     user: {
       email: "",
       emailVerified: "",
@@ -152,9 +184,11 @@ export default {
   }),
   methods: {
     logout() {
-      store.dispatch("auth/logout").then(() => {
-        console.log("Kevin");
-      });
+      store.dispatch("auth/logout").then(() => {});
+    },
+
+    getWochen() {
+      store.dispatch("data/getWochen").then(() => {});
     },
   },
 };

@@ -1,11 +1,11 @@
 <template>
   <v-container fluid>
     <v-card-title class="d-flex justify-center">
-      <v-btn icon>
+      <v-btn icon @click="vorherigeWoche">
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
-      <div>{{ aktuelleWoche.name }}</div>
-      <v-btn icon>
+      <div>{{ ausgewaehlteWoche.name }}</div>
+      <v-btn icon @click="naechsteWoche">
         <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
     </v-card-title>
@@ -26,6 +26,7 @@
         loading-text="Lädt... Bitte warten"
         no-data-text="noch keine Daten Eingetragen"
         hide-default-footer
+        disable-sort
       >
       </v-data-table>
     </v-card>
@@ -46,6 +47,7 @@
         loading-text="Lädt... Bitte warten"
         no-data-text="noch keine Daten Eingetragen"
         hide-default-footer
+        sort-by="Name"
       >
         <template v-slot:[`item.Montag`]="{ item }">
           <v-chip v-if="item.Montag != ''" :color="getColor(item.Montag)" dark>
@@ -104,6 +106,7 @@
 </template>
 
 <script>
+import store from "@/store/index";
 import * as API from "@/services/API";
 export default {
   name: "Home-View",
@@ -111,53 +114,58 @@ export default {
   data() {
     return {
       typs: ["Vegan", "Vegetarisch", "Glutenfrei", "Laktosefrei"],
-      aktuelleWoche: {
-        id: "",
-        name: "",
-      },
+      updated: false,
+      ausgewaehlteWoche: {},
       wochen: [],
       spezialBestellungen: [],
       bestellungGesamt: [],
       spezialheader: [
-        { text: "Name", value: "Name" },
-        { text: "Montag", value: "Montag" },
-        { text: "Dienstag", value: "Dienstag" },
-        { text: "Mittwoch", value: "Mittwoch" },
-        { text: "Donnerstag", value: "Donnerstag" },
-        { text: "Freitag", value: "Freitag" },
+        { text: "Name", value: "Name", sortable: false },
+        { text: "Montag", value: "Montag", align: "center", sortable: false },
+        {
+          text: "Dienstag",
+          value: "Dienstag",
+          align: "center",
+          sortable: false,
+        },
+        {
+          text: "Mittwoch",
+          value: "Mittwoch",
+          align: "center",
+          sortable: false,
+        },
+        {
+          text: "Donnerstag",
+          value: "Donnerstag",
+          align: "center",
+          sortable: false,
+        },
+        { text: "Freitag", value: "Freitag", align: "center", sortable: false },
       ],
       gesamtHeader: [
         { text: "Name", value: "Name" },
-        { text: "Montag", value: "Montag" },
-        { text: "Dienstag", value: "Dienstag" },
-        { text: "Mittwoch", value: "Mittwoch" },
-        { text: "Donnerstag", value: "Donnerstag" },
-        { text: "Freitag", value: "Freitag" },
+        { text: "Montag", value: "Montag", align: "center" },
+        { text: "Dienstag", value: "Dienstag", align: "center" },
+        { text: "Mittwoch", value: "Mittwoch", align: "center" },
+        { text: "Donnerstag", value: "Donnerstag", align: "center" },
+        { text: "Freitag", value: "Freitag", align: "center" },
       ],
     };
   },
 
   beforeMount() {
-    API.apiClient.get(`/wochen`).then((response) => {
-      this.wochen = response.data.data;
-      console.log(response.status);
-      console.log(response.data.message);
-    });
-    this.aktuelleWoche = { id: 1, name: "KW 36 2022" };
-    API.apiClient
-      .get(`/wochen=${this.aktuelleWoche.id}=SpezialEssen`)
-      .then((response) => {
-        var temp = [{}, {}, {}, {}, {}];
-        temp[0] = response.data.data.Normal;
-        temp[1] = response.data.data.Vegetarisch;
-        temp[2] = response.data.data.Vegan;
-        temp[3] = response.data.data.Glutenfrei;
-        temp[4] = response.data.data.Laktosefrei;
-        this.bestellungGesamt = temp;
-        this.spezialBestellungen = response.data.data.teilnehmer;
-        console.log(response.status);
-        console.log(response.data.message);
-      });
+    this.ausgewaehlteWoche = Object.assign(
+      {},
+      store.getters["data/naechsteWoche"]
+    );
+    this.getData();
+  },
+
+  updated() {
+    if (this.updated) {
+      this.getData();
+      this.updated = false;
+    }
   },
 
   methods: {
@@ -167,6 +175,52 @@ export default {
       else if (Essen == "Laktosefrei") return "#ffa014";
       else if (Essen == "Glutenfrei") return "#FBC02D";
       else if (Essen == "") return "white";
+    },
+
+    getData() {
+      API.apiClient.get(`/wochen`).then((response) => {
+        this.wochen = response.data.data;
+        console.log(response.status);
+        console.log(response.data.message);
+      });
+      API.apiClient
+        .get(`/wochen=${this.ausgewaehlteWoche.id}=SpezialEssen`)
+        .then((response) => {
+          var temp = [{}, {}, {}, {}, {}];
+          temp[0] = response.data.data.Normal;
+          temp[1] = response.data.data.Vegetarisch;
+          temp[2] = response.data.data.Vegan;
+          temp[3] = response.data.data.Glutenfrei;
+          temp[4] = response.data.data.Laktosefrei;
+          this.bestellungGesamt = temp;
+          this.spezialBestellungen = response.data.data.teilnehmer;
+          console.log(response.status);
+          console.log(response.data.message);
+        });
+    },
+
+    naechsteWoche() {
+      this.updated = true;
+      API.apiClient
+        .get(`/woche=${this.ausgewaehlteWoche.id + 1}`)
+        .then((response) => {
+          this.ausgewaehlteWoche = response.data.data;
+          console.log(response.status);
+          console.log(response.data.message);
+          console.log(response.data.data);
+        });
+    },
+
+    vorherigeWoche() {
+      this.updated = true;
+      API.apiClient
+        .get(`/woche=${this.ausgewaehlteWoche.id - 1}`)
+        .then((response) => {
+          this.ausgewaehlteWoche = response.data.data;
+          console.log(response.status);
+          console.log(response.data.message);
+          console.log(response.data.data);
+        });
     },
   },
 };

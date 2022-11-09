@@ -36,7 +36,7 @@ export default {
 
   data() {
     return {
-      inputRules: [(v) => !!v || "Benötigt"],
+      inputRules: [(v) => !!v || "Benötigt."],
     };
   },
 };

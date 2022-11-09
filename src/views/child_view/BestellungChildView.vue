@@ -1,11 +1,11 @@
 <template>
   <v-container fluid>
     <v-card-title class="d-flex justify-center">
-      <v-btn icon>
+      <v-btn icon @click="vorherigeWoche">
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
-      <div>{{ aktuelleWoche.name }}</div>
-      <v-btn icon>
+      <div>{{ ausgewaehlteWoche.name }}</div>
+      <v-btn icon @click="naechsteWoche">
         <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
     </v-card-title>
@@ -85,7 +85,7 @@
         no-data-text="noch keine Daten Eingetragen"
         hide-default-footer
         mobile-breakpoint="875"
-        disable-sort
+        sort-by="Name"
       >
         <template v-slot:top>
           <v-toolbar flat>
@@ -271,6 +271,7 @@ export default {
   data() {
     return {
       inputDialog: false,
+      updated: false,
       loadingSpecial: true,
       typs: ["Vegan", "Vegetarisch", "Glutenfrei", "Laktosefrei", ""],
       teilnehmer: [],
@@ -299,53 +300,47 @@ export default {
         { text: "Freitag", value: "Freitag" },
       ],
       normal: [],
+      normalDefault: [
+        { Montag: 0, Dienstag: 0, Mittwoch: 0, Donnerstag: 0, Freitag: 0 },
+      ],
       spezialBestellung: [],
-      aktuelleWoche: {},
+      ausgewaehlteWoche: {},
       header: [
-        { text: "Name", value: "Name", width: "15%" },
-        { text: "Montag", value: "Montag", width: "15%" },
-        { text: "Dienstag", value: "Dienstag", width: "15%" },
-        { text: "Mittwoch", value: "Mittwoch", width: "15%" },
-        { text: "Donnerstag", value: "Donnerstag", width: "15%" },
-        { text: "Freitag", value: "Freitag", width: "15%" },
+        { text: "Name", value: "Name", width: "15%", sortable: false },
+        { text: "Montag", value: "Montag", width: "15%", sortable: false },
+        { text: "Dienstag", value: "Dienstag", width: "15%", sortable: false },
+        { text: "Mittwoch", value: "Mittwoch", width: "15%", sortable: false },
+        {
+          text: "Donnerstag",
+          value: "Donnerstag",
+          width: "15%",
+          sortable: false,
+        },
+        { text: "Freitag", value: "Freitag", width: "15%", sortable: false },
       ],
       user: {},
     };
   },
-  beforeMount() {
+  async beforeMount() {
     this.user = Object.assign({}, store.getters["auth/authUser"]);
-    API.apiClient.get(`/wochen`).then((response) => {
-      console.log(response.status);
-      console.log(response.data.message);
-    });
-    this.aktuelleWoche = { id: 1, name: "KW 36 2022" };
-    API.apiClient
-      .get(
-        `/abteilung/${this.user.abteilung_id}/woche/${this.aktuelleWoche.id}`
-      )
-      .then((response) => {
-        console.log(response.status);
-        if (response.status == 204) {
-          console.log(response.statusText);
-        } else {
-          console.log(response.data.message);
-        }
-        console.log(response.data.data);
-        this.convertResponse(response.data.data);
-        this.spezialBestellung = response.data.data.spezial_essen;
-      });
-    API.apiClient
-      .get(`/abteilungTeilnehmerName=${this.user.abteilung_id}`)
-      .then((response) => {
-        this.teilnehmer = response.data.data;
-        console.log(this.teilnehmer);
-        console.log(response.status);
-        console.log(response.data.message);
-      });
+    this.ausgewaehlteWoche = await Object.assign(
+      {},
+      store.getters["data/naechsteWoche"]
+    );
+    console.log(store.getters["data/naechsteWoche"]);
+    this.getData();
   },
   mounted() {
     this.fillSpecialBestellung();
   },
+
+  updated() {
+    if (this.updated) {
+      this.getData();
+      this.updated = false;
+    }
+  },
+
   methods: {
     getColor(Essen) {
       if (Essen == "Vegan") return "green";
@@ -376,6 +371,55 @@ export default {
       temp2.Freitag = normal.freitag_normal;
       temp[0] = temp2;
       this.normal = temp;
+    },
+
+    getData() {
+      API.apiClient
+        .get(
+          `/abteilung/${this.user.abteilung_id}/woche/${this.ausgewaehlteWoche.id}`
+        )
+        .then((response) => {
+          console.log(response.status);
+          if (response.status == 204) {
+            this.normal = this.normalDefault;
+            console.log(response.statusText);
+          } else {
+            console.log(response.data.message);
+            this.convertResponse(response.data.data);
+            this.spezialBestellung = response.data.data.spezial_essen;
+          }
+        });
+      API.apiClient
+        .get(`/abteilungTeilnehmerName=${this.user.abteilung_id}`)
+        .then((response) => {
+          this.teilnehmer = response.data.data;
+          console.log(response.status);
+          console.log(response.data.message);
+        });
+    },
+
+    naechsteWoche() {
+      this.updated = true;
+      API.apiClient
+        .get(`/woche=${this.ausgewaehlteWoche.id + 1}`)
+        .then((response) => {
+          this.ausgewaehlteWoche = response.data.data;
+          console.log(response.status);
+          console.log(response.data.message);
+          console.log(response.data.data);
+        });
+    },
+
+    vorherigeWoche() {
+      this.updated = true;
+      API.apiClient
+        .get(`/woche=${this.ausgewaehlteWoche.id - 1}`)
+        .then((response) => {
+          this.ausgewaehlteWoche = response.data.data;
+          console.log(response.status);
+          console.log(response.data.message);
+          console.log(response.data.data);
+        });
     },
   },
 };

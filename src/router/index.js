@@ -207,6 +207,7 @@ const AuthPages = {
       component: LoginChildView,
       meta: {
         title: "Login",
+        requiresAuth: false,
         metaTags: [
           {
             name: "description",
@@ -225,6 +226,7 @@ const AuthPages = {
       component: PasswortResetChildView,
       meta: {
         title: "Passwort zurücksetzen",
+        requiresAuth: false,
         metaTags: [
           {
             name: "description",
@@ -273,7 +275,7 @@ router.beforeEach((to, from, next) => {
   const middleware = to.meta.middleware;
   const context = { to, from, next, store };
   const authUser = store.getters["auth/authUser"];
-  const reqAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const reqAuth = to.meta.requiresAuth;
   const loginQuery = { path: "/login", query: { redirect: to.fullPath } };
   if (reqAuth && !authUser) {
     store.dispatch("auth/getAuthUser").then(() => {

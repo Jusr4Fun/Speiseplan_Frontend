@@ -1,4 +1,4 @@
-# prototyp
+# Speiseplan Projekt
 
 ## Project setup
 ```

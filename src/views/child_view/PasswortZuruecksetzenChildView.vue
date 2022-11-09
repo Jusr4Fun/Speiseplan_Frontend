@@ -4,7 +4,7 @@
       <v-flex xs12 sm8 md4>
         <v-card class="elevation-12" v-on:keyup.enter="login">
           <v-toolbar dark color="primary">
-            <v-toolbar-title>Login</v-toolbar-title>
+            <v-toolbar-title>Passwort wiederherrstellen</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-form>
@@ -21,8 +21,17 @@
                 id="password"
                 prepend-icon="mdi-lock"
                 name="password"
-                label="Passwort"
+                label="Neues Passwort"
                 v-model="password"
+                :rules="[rules.required, rules.min]"
+                :type="show1 ? 'text' : 'password'"
+              ></v-text-field>
+              <v-text-field
+                id="passwordconfirm"
+                prepend-icon="mdi-lock"
+                name="passwordconfirm"
+                label="Neues Passwort Bestätigen"
+                v-model="passwordconfirm"
                 :rules="[rules.required, rules.min]"
                 :type="show1 ? 'text' : 'password'"
               ></v-text-field>
@@ -39,12 +48,12 @@
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex align-center">
-            <v-btn class="ma-4" color="primary" :to="'/' + 'PasswortVergessen'"
-              >Passwort Zurücksetzen</v-btn
+            <v-btn class="ma-4" color="primary" :to="'/' + 'login'"
+              >Zurück</v-btn
             >
             <v-spacer></v-spacer>
-            <v-btn class="ma-4" color="primary" @click="login" x-large
-              >Login</v-btn
+            <v-btn class="ma-4" color="primary" @click="resetPassword" x-large
+              >Passwort Zurücksetzen</v-btn
             >
           </v-card-actions>
         </v-card>
@@ -55,6 +64,7 @@
 
 <script>
 import AuthService from "@/services/AuthService";
+
 export default {
   name: "LoginDialog",
   data() {
@@ -66,6 +76,7 @@ export default {
       show4: false,
       email: "",
       password: "",
+      passwordconfirm: "",
       rules: {
         required: (value) => !!value || "Benötigt.",
         min: (v) => v.length >= 8 || "Min 8 characters",
@@ -73,40 +84,22 @@ export default {
     };
   },
   methods: {
-    async login() {
-      const payload = {
-        email: this.email,
-        password: this.password,
-      };
+    resetPassword() {
       this.error = null;
-      try {
-        await AuthService.login(payload);
-        var authUser = await this.$store.dispatch("auth/getAuthUser");
-        console.log(authUser);
-        if (authUser) {
-          this.check = false;
-          this.$router.push("/dashboard");
-        } else {
-          const error = Error(
-            "Unable to fetch user after login, check your API settings."
-          );
-          error.name = "Fetch User";
-          throw error;
-        }
-      } catch (error) {
-        this.check = true;
-        console.log(error);
-      }
-    },
-    /* login() {
+      this.message = null;
       const payload = {
         email: this.email,
         password: this.password,
+        password_confirmation: this.passwordconfirm,
+        token: this.$route.query.token,
       };
-      AuthService.login(payload)
-        .then(() => this.$router.push("/dashboard"))
-        .catch((error) => console.log(error.data));
-    }, */
+      AuthService.resetPassword(payload)
+        .then(() => {
+          this.message = "Password reset.";
+          this.$router.push("/login");
+        })
+        .catch(console.log("Fehler"));
+    },
   },
 };
 </script>

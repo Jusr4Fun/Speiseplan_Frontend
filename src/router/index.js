@@ -12,7 +12,8 @@ import TeilnehmerChildView from "../views/child_view/TeilnehmerChildView.vue";
 import MainView from "../views/MainView.vue";
 import AboutChildView from "../views/child_view/AboutChildView.vue";
 import AnmeldungView from "../views/AnmeldungView.vue";
-import PasswortResetChildView from "../views/child_view/PasswortResetChildView.vue";
+import PasswortVergessenChildView from "../views/child_view/PasswortVergessenChildView.vue";
+import PasswortZuruecksetzenChildView from "../views/child_view/PasswortZuruecksetzenChildView.vue";
 import SupportChildView from "../views/child_view/SupportChildView.vue";
 import roleCheck from "./roleCheck";
 import Nutzer from "../middleware/nutzer";
@@ -221,9 +222,28 @@ const AuthPages = {
       },
     },
     {
-      path: "/PasswortReset",
+      path: "/PasswortVergessen",
+      name: "Passwort Vergessen",
+      component: PasswortVergessenChildView,
+      meta: {
+        title: "Passwort Vergessen",
+        requiresAuth: false,
+        metaTags: [
+          {
+            name: "description",
+            content: "Passwort Vergessen Page",
+          },
+          {
+            property: "og:description",
+            content: "Passwort Vergessen Page",
+          },
+        ],
+      },
+    },
+    {
+      path: "/PasswortZuruecksetzen",
       name: "Passwort zurücksetzen",
-      component: PasswortResetChildView,
+      component: PasswortZuruecksetzenChildView,
       meta: {
         title: "Passwort zurücksetzen",
         requiresAuth: false,

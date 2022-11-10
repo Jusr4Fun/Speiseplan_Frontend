@@ -303,6 +303,7 @@ export default {
         { Montag: 0, Dienstag: 0, Mittwoch: 0, Donnerstag: 0, Freitag: 0 },
       ],
       spezialBestellung: [],
+      spezialBestellungDefault: [],
       ausgewaehlteWoche: null,
       header: [
         { text: "Name", value: "Name", width: "15%", sortable: false },
@@ -380,6 +381,7 @@ export default {
           console.log(response.status);
           if (response.status == 204) {
             this.normal = this.normalDefault;
+            this.spezialBestellung = this.spezialBestellungDefault;
             console.log(response.statusText);
           } else {
             console.log(response.data.message);
@@ -404,7 +406,6 @@ export default {
           this.ausgewaehlteWoche = response.data.data;
           console.log(response.status);
           console.log(response.data.message);
-          console.log(response.data.data);
         });
     },
 
@@ -416,7 +417,6 @@ export default {
           this.ausgewaehlteWoche = response.data.data;
           console.log(response.status);
           console.log(response.data.message);
-          console.log(response.data.data);
         });
     },
   },

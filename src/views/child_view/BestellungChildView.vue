@@ -78,7 +78,6 @@
         no-gutters
         :headers="header"
         :items="spezialBestellung"
-        :items-per-page="5"
         class="elevation-1 ma-2"
         :loading="loadingSpecial"
         loading-text="Laden... Bitte Warten"

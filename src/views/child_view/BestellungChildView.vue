@@ -303,7 +303,7 @@ export default {
         { Montag: 0, Dienstag: 0, Mittwoch: 0, Donnerstag: 0, Freitag: 0 },
       ],
       spezialBestellung: [],
-      ausgewaehlteWoche: {},
+      ausgewaehlteWoche: null,
       header: [
         { text: "Name", value: "Name", width: "15%", sortable: false },
         { text: "Montag", value: "Montag", width: "15%", sortable: false },
@@ -322,11 +322,10 @@ export default {
   },
   async beforeMount() {
     this.user = Object.assign({}, store.getters["auth/authUser"]);
-    this.ausgewaehlteWoche = await Object.assign(
+    this.ausgewaehlteWoche = Object.assign(
       {},
       store.getters["data/naechsteWoche"]
     );
-    console.log(store.getters["data/naechsteWoche"]);
     this.getData();
   },
   mounted() {

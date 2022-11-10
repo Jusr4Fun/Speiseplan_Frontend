@@ -35,16 +35,15 @@ export const actions = {
       time: new Date().getTime(),
       offset: new Date().getTimezoneOffset(),
     };
-    DataService.getAktuelleWoche(date)
+    await DataService.getAktuelleWoche(date)
       .then((response) => {
         commit("SET_AKTUELLEWOCHE", response.data.data);
       })
       .catch((error) => {
         console.log(error.data);
       });
-    DataService.getNaechsteWoche(date)
+    await DataService.getNaechsteWoche(date)
       .then((response) => {
-        console.log(response.data.data);
         commit("SET_NAECHSTEWOCHE", response.data.data);
       })
       .catch((error) => {

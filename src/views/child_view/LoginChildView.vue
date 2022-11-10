@@ -82,7 +82,6 @@ export default {
       try {
         await AuthService.login(payload);
         var authUser = await this.$store.dispatch("auth/getAuthUser");
-        console.log(authUser);
         if (authUser) {
           this.check = false;
           this.$router.push("/dashboard");

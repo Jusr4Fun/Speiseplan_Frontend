@@ -92,7 +92,7 @@
         </v-expand-transition>
       </v-menu>
     </v-app-bar>
-    <v-main>
+    <v-main v-if="loaded">
       <router-view />
     </v-main>
   </v-app>
@@ -105,8 +105,8 @@ import store from "@/store/index";
 
 export default {
   name: "MainApp",
-  async created() {
-    await this.getWochen();
+  async beforeMount() {
+    this.loaded = await this.getWochen();
     this.$router.options.routes.forEach((route) => {
       if (store.getters["auth/authUser"]) {
         if (route.name == "Main") {
@@ -158,6 +158,7 @@ export default {
     this.user.initials = intialSplit[0][0] + intialSplit[1][0];
   },
   data: () => ({
+    loaded: false,
     show: true,
     drawer: null,
     usercard: null,
@@ -187,8 +188,9 @@ export default {
       store.dispatch("auth/logout").then(() => {});
     },
 
-    getWochen() {
-      store.dispatch("data/getWochen").then(() => {});
+    async getWochen() {
+      await store.dispatch("data/getWochen").then(() => {});
+      return true;
     },
   },
 };

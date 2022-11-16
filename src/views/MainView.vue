@@ -1,44 +1,42 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="drawer" app color="secondary">
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title class="text-h6"> Menu </v-list-item-title>
-        </v-list-item-content>
+    <v-navigation-drawer
+      expand-on-hover
+      mini-variant
+      app
+      permanent
+      color="secondary"
+    >
+      <v-list-item class="px-2">
+        <v-list-item-avatar color="white">
+          <v-icon> mdi-food-fork-drink </v-icon>
+        </v-list-item-avatar>
+        <v-list-item-title>Speiseplan</v-list-item-title>
       </v-list-item>
 
       <v-divider></v-divider>
 
       <v-list dense nav>
-        <v-list-item
-          v-for="item in items"
-          :key="item.name"
-          :to="item.path"
-          link
-        >
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
+        <v-list-item-group active-class="bg-active">
+          <v-list-item
+            v-for="item in items"
+            :key="item.name"
+            :to="item.path"
+            link
+          >
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
 
-          <v-list-item-content>
-            <v-list-item-title>{{ item.name }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.name }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar app fixed color="primary" elevate-on-scroll>
-      <v-app-bar-nav-icon
-        @click="drawer = !drawer"
-        class="pa-md-6"
-      ></v-app-bar-nav-icon>
-      <v-img
-        lazy-src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Logo-cjd.svg/142px-Logo-cjd.svg.png"
-        max-height="48"
-        max-width="95"
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Logo-cjd.svg/142px-Logo-cjd.svg.png"
-      ></v-img>
-
-      <v-toolbar-title class="pa-md-4">{{
+      <v-toolbar-title class="pa-md-4 white--text">{{
         $route.meta.title || "Default title"
       }}</v-toolbar-title>
       <v-spacer></v-spacer>
@@ -64,7 +62,7 @@
             class="ma-2"
           >
             <v-avatar color="secondary" size="44">
-              <span class="white--text text-h5">{{ user.initials }}</span>
+              <span class="text-h5">{{ user.initials }}</span>
             </v-avatar>
           </v-btn>
         </template>
@@ -73,7 +71,7 @@
             <v-list-item-content class="justify-center">
               <div class="mx-auto text-center">
                 <v-avatar color="secondary pa-md-6">
-                  <span class="white--text text-h5">{{ user.initials }}</span>
+                  <span class="text-h5">{{ user.initials }}</span>
                 </v-avatar>
                 <br />
                 <h3 class="pa-md-2">{{ user.name }}</h3>
@@ -173,7 +171,6 @@ export default {
     loaded: false,
     userLoaded: false,
     show: true,
-    drawer: null,
     usercard: null,
     expand: false,
     temp: {
@@ -214,3 +211,10 @@ export default {
   },
 };
 </script>
+
+<style>
+.bg-active {
+  background-color: #006b99;
+  color: white !important;
+}
+</style>

@@ -26,7 +26,7 @@
 
         <v-divider></v-divider>
 
-        <v-card-text class="secondary--text">
+        <v-card-text class="white--text">
           {{ new Date().getFullYear() }} — <strong>CJD</strong>
         </v-card-text>
       </v-card>

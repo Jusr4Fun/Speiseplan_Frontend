@@ -3,7 +3,7 @@
     <v-layout align-center justify-center>
       <v-flex xs12 sm8 md4>
         <v-card class="elevation-12">
-          <v-toolbar dark color="primary">
+          <v-toolbar dark color="secondary">
             <v-toolbar-title>Passwort Zurücksetzen</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
@@ -19,11 +19,11 @@
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex align-center">
-            <v-btn class="ma-4" color="primary" :to="'/' + 'login'"
-              >Zurück</v-btn
-            >
+            <v-btn class="ma-4" color="secondary" :to="'/' + 'login'">
+              Zurück
+            </v-btn>
             <v-spacer></v-spacer>
-            <v-btn class="ma-4" color="primary" @click="resetPasswort" x-large
+            <v-btn class="ma-4" color="secondary" @click="resetPasswort" x-large
               >Passwort Zurücksetzen</v-btn
             >
           </v-card-actions>

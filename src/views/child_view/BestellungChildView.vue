@@ -1,12 +1,28 @@
 <template>
   <v-container fluid>
-    <v-card-title class="d-flex justify-center">
-      <v-btn icon @click="vorherigeWoche">
-        <v-icon>mdi-chevron-left</v-icon>
+    <v-card-title class="d-flex justify-center" elevation="2">
+      <v-btn
+        dark
+        fab
+        small
+        class="ma-4"
+        @click="vorherigeWoche"
+        elevation="2"
+        color="buttonGreen"
+      >
+        <v-icon dark>mdi-chevron-left</v-icon>
       </v-btn>
       <div>{{ ausgewaehlteWoche.name }}</div>
-      <v-btn icon @click="naechsteWoche">
-        <v-icon>mdi-chevron-right</v-icon>
+      <v-btn
+        dark
+        fab
+        small
+        class="ma-4"
+        @click="naechsteWoche"
+        elevation="2"
+        color="buttonGreen"
+      >
+        <v-icon dark>mdi-chevron-right</v-icon>
       </v-btn>
     </v-card-title>
     <v-layout child-flex>
@@ -90,10 +106,123 @@
           <v-toolbar flat>
             <v-toolbar-title
               class="d-flex align-center text-h5 font-weight-bold ma-2"
-              >Spezial Bestellungen</v-toolbar-title
-            ></v-toolbar
-          ></template
-        >
+              >Spezial Bestellungen
+            </v-toolbar-title>
+            <v-row class="d-flex justify-end pa-md-4">
+              <v-card-title>
+                Teilnehmer Hinzufügen
+                <v-dialog
+                  transition="dialog-top-transition"
+                  max-width="600"
+                  persistent
+                  v-model="inputDialog"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      class="mx-4 pa-md-2"
+                      fab
+                      dark
+                      color="buttonGreen"
+                      style="vertical-align: middle"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      <v-icon dark> mdi-plus </v-icon>
+                    </v-btn>
+                  </template>
+                  <template v-slot-model="dialog">
+                    <v-card>
+                      <v-toolbar color="primary" dark
+                        >Neue Spezial Bestellung</v-toolbar
+                      >
+                      <v-card-text>
+                        <v-autocomplete
+                          label="Teilnehmer"
+                          required
+                          v-model="editedItem"
+                          :rules="inputRules"
+                          :items="teilnehmer"
+                          item-text="name"
+                          return-object
+                        ></v-autocomplete>
+                        <v-autocomplete
+                          label="Montag"
+                          required
+                          auto-select-first
+                          v-model="editedItem.Montag"
+                          :items="typs"
+                          item-text="name"
+                          item-value="id"
+                        >
+                          <template #selection="{ item }">
+                            <v-chip v-if="item != ''" :color="getColor(item)">
+                              {{ item }}
+                            </v-chip>
+                          </template>
+                        </v-autocomplete>
+                        <v-autocomplete
+                          label="Dienstag"
+                          required
+                          v-model="editedItem.Dienstag"
+                          :items="typs"
+                        >
+                          <template #selection="{ item }">
+                            <v-chip v-if="item != ''" :color="getColor(item)">
+                              {{ item }}
+                            </v-chip>
+                          </template>
+                        </v-autocomplete>
+                        <v-autocomplete
+                          label="Mittwoch"
+                          required
+                          auto-select-first
+                          v-model="editedItem.Mittwoch"
+                          :items="typs"
+                        >
+                          <template #selection="{ item }">
+                            <v-chip v-if="item != ''" :color="getColor(item)">
+                              {{ item }}
+                            </v-chip>
+                          </template>
+                        </v-autocomplete>
+                        <v-autocomplete
+                          label="Donnerstag"
+                          required
+                          auto-select-first
+                          v-model="editedItem.Donnerstag"
+                          :items="typs"
+                        >
+                          <template #selection="{ item }">
+                            <v-chip v-if="item != ''" :color="getColor(item)">
+                              {{ item }}
+                            </v-chip>
+                          </template>
+                        </v-autocomplete>
+                        <v-autocomplete
+                          label="Freitag"
+                          required
+                          auto-select-first
+                          v-model="editedItem.Freitag"
+                          :items="typs"
+                        >
+                          <template #selection="{ item }">
+                            <v-chip v-if="item != ''" :color="getColor(item)">
+                              {{ item }}
+                            </v-chip>
+                          </template>
+                        </v-autocomplete>
+                      </v-card-text>
+                      <v-card-actions class="justify-end">
+                        <v-btn text @click="speichern">Anlegen</v-btn>
+                        <v-btn text @click="close">Close</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </template>
+                </v-dialog>
+              </v-card-title>
+            </v-row>
+          </v-toolbar>
+        </template>
         <template v-slot:[`item.Name`]="{ item }">
           {{ item.Name }}
         </template>
@@ -144,128 +273,6 @@
         </template>
       </v-data-table>
     </v-layout>
-    <v-row class="d-flex justify-end pa-md-2">
-      <v-card-title>
-        Hinzufügen
-        <v-dialog
-          transition="dialog-top-transition"
-          max-width="600"
-          persistent
-          v-model="inputDialog"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              class="mx-4 pa-md-2"
-              fab
-              dark
-              color="buttonGreen"
-              style="vertical-align: middle"
-              v-bind="attrs"
-              v-on="on"
-            >
-              <v-icon dark> mdi-plus </v-icon>
-            </v-btn>
-          </template>
-          <template v-slot-model="dialog">
-            <v-card>
-              <v-toolbar color="primary" dark
-                >Neue Spezial Bestellung</v-toolbar
-              >
-              <v-card-text>
-                <v-autocomplete
-                  label="Teilnehmer"
-                  required
-                  v-model="editedItem"
-                  :rules="inputRules"
-                  :items="teilnehmer"
-                  item-text="name"
-                  return-object
-                ></v-autocomplete>
-                <v-autocomplete
-                  label="Montag"
-                  required
-                  auto-select-first
-                  v-model="editedItem.Montag"
-                  :items="typs"
-                  item-text="name"
-                  item-value="id"
-                >
-                  <template #selection="{ item }">
-                    <v-chip v-if="item != ''" :color="getColor(item)">
-                      {{ item }}
-                    </v-chip>
-                  </template>
-                </v-autocomplete>
-                <v-autocomplete
-                  label="Dienstag"
-                  required
-                  v-model="editedItem.Dienstag"
-                  :items="typs"
-                >
-                  <template #selection="{ item }">
-                    <v-chip v-if="item != ''" :color="getColor(item)">
-                      {{ item }}
-                    </v-chip>
-                  </template>
-                </v-autocomplete>
-                <v-autocomplete
-                  label="Mittwoch"
-                  required
-                  auto-select-first
-                  v-model="editedItem.Mittwoch"
-                  :items="typs"
-                >
-                  <template #selection="{ item }">
-                    <v-chip v-if="item != ''" :color="getColor(item)">
-                      {{ item }}
-                    </v-chip>
-                  </template>
-                </v-autocomplete>
-                <v-autocomplete
-                  label="Donnerstag"
-                  required
-                  auto-select-first
-                  v-model="editedItem.Donnerstag"
-                  :items="typs"
-                >
-                  <template #selection="{ item }">
-                    <v-chip v-if="item != ''" :color="getColor(item)">
-                      {{ item }}
-                    </v-chip>
-                  </template>
-                </v-autocomplete>
-                <v-autocomplete
-                  label="Freitag"
-                  required
-                  auto-select-first
-                  v-model="editedItem.Freitag"
-                  :items="typs"
-                >
-                  <template #selection="{ item }">
-                    <v-chip v-if="item != ''" :color="getColor(item)">
-                      {{ item }}
-                    </v-chip>
-                  </template>
-                </v-autocomplete>
-              </v-card-text>
-              <v-card-actions class="justify-end">
-                <v-btn text @click="speichern">Anlegen</v-btn>
-                <v-btn text @click="close">Close</v-btn>
-              </v-card-actions>
-            </v-card>
-          </template>
-        </v-dialog>
-      </v-card-title>
-    </v-row>
-    <v-row class="d-flex justify-end pa-md-2"
-      ><v-btn
-        class="mx-4 pa-md-2"
-        dark
-        color="buttonGreen"
-        style="vertical-align: middle"
-        >Speichern</v-btn
-      >
-    </v-row>
   </v-container>
 </template>
 

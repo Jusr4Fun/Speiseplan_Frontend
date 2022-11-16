@@ -1,12 +1,28 @@
 <template>
   <v-container fluid>
-    <v-card-title class="d-flex justify-center">
-      <v-btn icon @click="vorherigeWoche">
-        <v-icon>mdi-chevron-left</v-icon>
+    <v-card-title class="d-flex justify-center" elevation="2">
+      <v-btn
+        dark
+        fab
+        small
+        class="ma-4"
+        @click="vorherigeWoche"
+        elevation="2"
+        color="buttonGreen"
+      >
+        <v-icon dark>mdi-chevron-left</v-icon>
       </v-btn>
       <div>{{ ausgewaehlteWoche.name }}</div>
-      <v-btn icon @click="naechsteWoche">
-        <v-icon>mdi-chevron-right</v-icon>
+      <v-btn
+        dark
+        fab
+        small
+        class="ma-4"
+        @click="naechsteWoche"
+        elevation="2"
+        color="buttonGreen"
+      >
+        <v-icon dark>mdi-chevron-right</v-icon>
       </v-btn>
     </v-card-title>
     <v-row>

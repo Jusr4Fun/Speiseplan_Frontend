@@ -10,8 +10,8 @@ const vuetify = new Vuetify({
     },
     themes: {
       light: {
-        primary: "#96c21c",
-        secondary: "#006b99",
+        primary: "#006b99",
+        secondary: "#96c21c",
         accent: "#2c8cbe",
         error: "#f44336",
         warning: "#e91e63",
@@ -19,6 +19,7 @@ const vuetify = new Vuetify({
         success: "#4CAF50",
         background: "#bcaaa4",
         buttonGreen: "#96c21c",
+        navicon: "#424242",
       },
       dark: {
         primary: "#96c21c",
@@ -30,6 +31,7 @@ const vuetify = new Vuetify({
         success: "#4CAF50",
         background: "#bcaaa4",
         buttonGreen: "#96c21c",
+        navicon: "#424242",
       },
     },
   },

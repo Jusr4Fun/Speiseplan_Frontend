@@ -139,7 +139,7 @@ const MainPages = {
       name: "Benutzerverwaltung",
       component: IndividuellUserVerwaltungChildView,
       meta: {
-        icon: "mdi-account-group",
+        icon: "mdi-account-cog",
         title: "Benutzerverwaltung",
         requiresAuth: true,
         middleware: [Nutzer],

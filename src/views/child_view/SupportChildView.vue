@@ -7,16 +7,25 @@
       <v-container>
         <v-row>
           <v-col cols="12">
-            <v-text-field label="Email" :rules="inputRules"></v-text-field>
+            <v-text-field
+              label="Email"
+              :rules="inputRules"
+              v-model="email"
+            ></v-text-field>
           </v-col>
           <v-col cols="12">
-            <v-text-field label="Betreff" :rules="inputRules"></v-text-field>
+            <v-text-field
+              label="Betreff"
+              :rules="inputRules"
+              v-model="betreff"
+            ></v-text-field>
           </v-col>
           <v-col cols="12">
             <v-textarea
               label="Details"
               outlined
               :rules="inputRules"
+              v-model="nachricht"
             ></v-textarea>
           </v-col>
         </v-row>
@@ -24,7 +33,7 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="primary" @click="dialog = false"> Senden </v-btn>
+      <v-btn color="primary" @click="senden"> Senden </v-btn>
       <v-spacer></v-spacer>
     </v-card-actions>
   </v-card>
@@ -36,8 +45,19 @@ export default {
 
   data() {
     return {
+      email: "Meial",
+      betreff: "adsad",
+      nachricht: "afadf",
       inputRules: [(v) => !!v || "Benötigt."],
     };
+  },
+
+  methods: {
+    senden() {
+      console.log(this.email);
+      console.log(this.betreff);
+      console.log(this.nachricht);
+    },
   },
 };
 </script>

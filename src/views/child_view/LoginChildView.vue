@@ -79,33 +79,8 @@ export default {
         password: this.password,
       };
       this.error = null;
-      try {
-        await AuthService.login(payload);
-        var authUser = await this.$store.dispatch("auth/getAuthUser");
-        if (authUser) {
-          this.check = false;
-          this.$router.push("/dashboard");
-        } else {
-          const error = Error(
-            "Unable to fetch user after login, check your API settings."
-          );
-          error.name = "Fetch User";
-          throw error;
-        }
-      } catch (error) {
-        this.check = true;
-        console.log(error);
-      }
+      await AuthService.login(payload);
     },
-    /* login() {
-      const payload = {
-        email: this.email,
-        password: this.password,
-      };
-      AuthService.login(payload)
-        .then(() => this.$router.push("/dashboard"))
-        .catch((error) => console.log(error.data));
-    }, */
   },
 };
 </script>

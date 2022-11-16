@@ -37,19 +37,19 @@ export const actions = {
   },
   async getAuthUser({ commit }) {
     commit("SET_LOADING", true);
-    var test = false;
+    var success = false;
     await AuthService.getAuthUser()
       .then((response) => {
         commit("SET_USER", response.data.data);
         commit("SET_LOADING", false);
-        test = true;
+        success = true;
       })
       .catch((error) => {
         commit("SET_LOADING", false);
         commit("SET_USER", null);
-        commit("SET_ERROR", console.log(error.data));
+        commit("SET_ERROR", error.data);
       });
-    return test;
+    return success;
   },
 };
 

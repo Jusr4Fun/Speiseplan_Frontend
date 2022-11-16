@@ -20,6 +20,7 @@ import Nutzer from "../middleware/nutzer";
 import Koch from "../middleware/koch";
 import Admin from "../middleware/admin";
 import Gast from "../middleware/gast";
+import AuthService from "@/services/AuthService";
 
 Vue.use(VueRouter);
 
@@ -291,13 +292,14 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const middleware = to.meta.middleware;
   const context = { to, from, next, store };
   const authUser = store.getters["auth/authUser"];
   const reqAuth = to.meta.requiresAuth;
   const loginQuery = { path: "/login", query: { redirect: to.fullPath } };
   if (reqAuth && !authUser) {
+    console.log("?");
     store.dispatch("auth/getAuthUser").then(() => {
       if (!store.getters["auth/authUser"]) {
         next(loginQuery);
@@ -308,6 +310,14 @@ router.beforeEach((to, from, next) => {
   } else if (reqAuth) {
     checkRole(middleware, context);
   } else {
+    if (to.matched[0].name != "AuthPages") {
+      console.log("klar");
+      if (AuthService.login()) {
+        await store.dispatch("auth/getAuthUser");
+      }
+    } else {
+      AuthService.login();
+    }
     next();
   }
 });

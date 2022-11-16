@@ -175,15 +175,20 @@
                 <v-autocomplete
                   label="Teilnehmer"
                   required
-                  v-model="editedItem.Name"
+                  v-model="editedItem"
                   :rules="inputRules"
                   :items="teilnehmer"
+                  item-text="name"
+                  return-object
                 ></v-autocomplete>
                 <v-autocomplete
                   label="Montag"
                   required
+                  auto-select-first
                   v-model="editedItem.Montag"
                   :items="typs"
+                  item-text="name"
+                  item-value="id"
                 >
                   <template #selection="{ item }">
                     <v-chip v-if="item != ''" :color="getColor(item)">
@@ -206,6 +211,7 @@
                 <v-autocomplete
                   label="Mittwoch"
                   required
+                  auto-select-first
                   v-model="editedItem.Mittwoch"
                   :items="typs"
                 >
@@ -218,6 +224,7 @@
                 <v-autocomplete
                   label="Donnerstag"
                   required
+                  auto-select-first
                   v-model="editedItem.Donnerstag"
                   :items="typs"
                 >
@@ -230,6 +237,7 @@
                 <v-autocomplete
                   label="Freitag"
                   required
+                  auto-select-first
                   v-model="editedItem.Freitag"
                   :items="typs"
                 >
@@ -272,23 +280,24 @@ export default {
       inputDialog: false,
       updated: false,
       loadingSpecial: true,
-      typs: ["Vegan", "Vegetarisch", "Glutenfrei", "Laktosefrei", ""],
-      teilnehmer: [],
+      wochenBestellungID: null,
+      typs: ["", "Vegan", "Vegetarisch", "Glutenfrei", "Laktosefrei"],
+      teilnehmer: {},
       defaultItem: {
-        Name: "",
-        Montag: "",
-        Dienstag: "",
-        Mittwoch: "",
-        Donnerstag: "",
-        Freitag: "",
+        Name: " ",
+        Montag: " ",
+        Dienstag: " ",
+        Mittwoch: " ",
+        Donnerstag: " ",
+        Freitag: " ",
       },
       editedItem: {
-        Name: "",
-        Montag: "",
-        Dienstag: "",
-        Mittwoch: "",
-        Donnerstag: "",
-        Freitag: "",
+        Name: " ",
+        Montag: " ",
+        Dienstag: " ",
+        Mittwoch: " ",
+        Donnerstag: " ",
+        Freitag: " ",
       },
       inputRules: [(v) => !!v || "Schreib was rein"],
       normalHeader: [
@@ -306,7 +315,7 @@ export default {
       spezialBestellungDefault: [],
       ausgewaehlteWoche: null,
       header: [
-        { text: "Name", value: "Name", width: "15%", sortable: false },
+        { text: "Name", value: "name", width: "15%", sortable: false },
         { text: "Montag", value: "Montag", width: "15%", sortable: false },
         { text: "Dienstag", value: "Dienstag", width: "15%", sortable: false },
         { text: "Mittwoch", value: "Mittwoch", width: "15%", sortable: false },
@@ -327,7 +336,7 @@ export default {
       {},
       store.getters["data/naechsteWoche"]
     );
-    this.getData();
+    await this.getData();
   },
   mounted() {
     this.fillSpecialBestellung();
@@ -349,8 +358,9 @@ export default {
       else if (Essen == "") return "white";
     },
     speichern() {
-      console.log("Gespeichert");
-      this.spezialBestellung.push(this.editedItem);
+      console.log(this.editedItem);
+      this.spezialBestellung.push(Object.assign({}, this.editedItem));
+      this.editedItem = this.defaultItem;
       this.inputDialog = false;
     },
     close() {
@@ -359,17 +369,6 @@ export default {
     },
     fillSpecialBestellung() {
       this.loadingSpecial = false;
-    },
-    convertResponse(normal) {
-      var temp = [];
-      var temp2 = {};
-      temp2.Montag = normal.montag_normal;
-      temp2.Dienstag = normal.dienstag_normal;
-      temp2.Mittwoch = normal.mittwoch_normal;
-      temp2.Donnerstag = normal.donnerstag_normal;
-      temp2.Freitag = normal.freitag_normal;
-      temp[0] = temp2;
-      this.normal = temp;
     },
 
     getData() {
@@ -382,16 +381,20 @@ export default {
           if (response.status == 204) {
             this.normal = this.normalDefault;
             this.spezialBestellung = this.spezialBestellungDefault;
+            this.wochenBestellungID = null;
             console.log(response.statusText);
           } else {
             console.log(response.data.message);
-            this.convertResponse(response.data.data);
+            console.log(response.data.data);
+            this.normal = response.data.data.normal;
+            this.wochenBestellungID = response.data.data.id;
             this.spezialBestellung = response.data.data.spezial_essen;
           }
         });
       API.apiClient
         .get(`/abteilungTeilnehmerName=${this.user.abteilung_id}`)
         .then((response) => {
+          console.log(response.data.data);
           this.teilnehmer = response.data.data;
           console.log(response.status);
           console.log(response.data.message);
@@ -418,6 +421,35 @@ export default {
           console.log(response.status);
           console.log(response.data.message);
         });
+    },
+
+    speicherAenderungen() {
+      var tempUebergabe = {};
+      tempUebergabe.normal = this.normal;
+      tempUebergabe.spezial = this.spezialBestellung;
+      tempUebergabe.woche_id = this.ausgewaehlteWoche.id;
+      tempUebergabe.abteilung_id = this.user.abteilung_id;
+      tempUebergabe.bestellungs_id = this.wochenBestellungID;
+      API.apiClient.post(`/updateOrCreateWochenBestellung`, tempUebergabe);
+    },
+
+    onFilter(item) {
+      console.log(item);
+      return item.name;
+    },
+  },
+  watch: {
+    spezialBestellung: {
+      deep: true,
+      handler() {
+        this.speicherAenderungen();
+      },
+    },
+    normal: {
+      deep: true,
+      handler() {
+        this.speicherAenderungen();
+      },
     },
   },
 };

@@ -106,7 +106,12 @@ import store from "@/store/index";
 export default {
   name: "MainApp",
   async beforeMount() {
-    this.loaded = await this.getWochen();
+    console.log(store.getters["auth/loggedIn"]);
+    if (store.getters["auth/loggedIn"]) {
+      this.loaded = await this.getWochen();
+    } else {
+      this.loaded = true;
+    }
     this.$router.options.routes.forEach((route) => {
       if (store.getters["auth/authUser"]) {
         if (route.name == "Main") {
@@ -148,17 +153,25 @@ export default {
         }
       }
     });
-    this.user = Object.assign({}, store.getters["auth/authUser"]);
-    const intialSplit = this.user.name.split(" ");
-    this.user.initials = intialSplit[0][0] + intialSplit[1][0];
   },
-  beforeUpdate() {
-    this.user = Object.assign({}, store.getters["auth/authUser"]);
-    const intialSplit = this.user.name.split(" ");
-    this.user.initials = intialSplit[0][0] + intialSplit[1][0];
+  async beforeUpdate() {
+    if (store.getters["auth/authUser"]) {
+      this.loadUser();
+    } else {
+      this.user = this.defaultUser;
+      /* try {
+        await store.dispatch["auth/getAuthUser"];
+        this.loadUser();
+      } catch {
+        this.user = this.defaultUser;
+        console.log("hier");
+      } */
+    }
   },
+
   data: () => ({
     loaded: false,
+    userLoaded: false,
     show: true,
     drawer: null,
     usercard: null,
@@ -191,6 +204,12 @@ export default {
     async getWochen() {
       await store.dispatch("data/getWochen").then(() => {});
       return true;
+    },
+
+    loadUser() {
+      this.user = Object.assign({}, store.getters["auth/authUser"]);
+      const intialSplit = this.user.name.split(" ");
+      this.user.initials = intialSplit[0][0] + intialSplit[1][0];
     },
   },
 };

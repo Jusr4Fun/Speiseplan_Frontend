@@ -1,6 +1,6 @@
 <template>
-  <v-container fill-height fluid>
-    <v-row class="d-flex justify-start dense" dense>
+  <v-container class="fill-height" fluid>
+    <v-row class="flex-grow-0 dense" justify="start" align-self="start" dense>
       <v-col>
         <v-card
           class="indigo darken-4 fill-height white--text text-center rounded-xl0"
@@ -60,7 +60,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row class="fill-height" dense>
+    <v-row justify="start" dense>
       <v-col>
         <v-card
           class="text-center green fill-height accent-4 rounded-x10"
@@ -73,3 +73,13 @@
     </v-row>
   </v-container>
 </template>
+<style scoped>
+.container.fill-height {
+  flex-direction: column;
+  align-items: initial;
+}
+
+.container.fill-height > .row {
+  flex: 1 1 auto;
+}
+</style>

@@ -6,6 +6,7 @@
       app
       permanent
       color="secondary"
+      class="d-print-none"
     >
       <v-list-item class="px-2">
         <v-list-item-avatar color="white">
@@ -35,7 +36,7 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar app fixed color="primary" elevate-on-scroll>
+    <v-app-bar app fixed color="primary" elevate-on-scroll class="d-print-none">
       <v-toolbar-title class="pa-md-4 white--text">{{
         $route.meta.title || "Default title"
       }}</v-toolbar-title>

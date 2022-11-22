@@ -73,7 +73,7 @@
           class="text-center deep-orange lighten-3 fill-height rounded-x10"
           ref="card"
         >
-          <v-card-title>
+          <v-card-text>
             <v-img :height="imgheight" src="@/assets/pics/kw47.jpg" contain>
               <v-btn
                 dark
@@ -97,7 +97,7 @@
                 <v-icon dark>mdi-chevron-right</v-icon>
               </v-btn>
             </v-img>
-          </v-card-title>
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -105,12 +105,12 @@
 </template>
 <style scoped>
 .container.fill-height {
-  flex-direction: column;
-  align-items: unset;
+  flex-direction: column !important;
+  align-items: unset !important;
 }
 
 .container.fill-height > .row {
-  flex: 1 1 auto;
+  flex: 1 1 auto !important;
   max-width: initial;
   width: 100%;
 }

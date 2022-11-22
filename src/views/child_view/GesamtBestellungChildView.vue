@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid id="print">
     <v-card-title class="d-flex justify-center" elevation="2">
       <v-btn
         dark
@@ -108,12 +108,13 @@
         </template>
       </v-data-table>
     </v-layout>
-    <v-row class="d-flex justify-end pa-md-6"
+    <v-row class="d-flex justify-end pa-md-6 d-print-none"
       ><v-btn
         class="mx-4 pa-md-2"
         dark
         color="buttonGreen"
         style="vertical-align: middle"
+        @click="print"
       >
         Drucken
       </v-btn>
@@ -237,6 +238,42 @@ export default {
           console.log(response.data.message);
           console.log(response.data.data);
         });
+    },
+
+    print() {
+      window.print();
+      /* // Get HTML to print from element
+      const prtHtml = document.getElementById("print").innerHTML;
+
+      // Get all stylesheets HTML
+      let stylesHtml = "";
+      for (const node of [
+        ...document.querySelectorAll('link[rel="stylesheet"], style'),
+      ]) {
+        stylesHtml += node.outerHTML;
+      }
+
+      // Open the print window
+      const WinPrint = window.open(
+        "",
+        "",
+        "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
+      );
+
+      WinPrint.document.write(`<!DOCTYPE html>
+<html>
+  <head>
+    ${stylesHtml}
+  </head>
+  <body>
+    ${prtHtml}
+  </body>
+</html>`);
+
+      WinPrint.document.close();
+      WinPrint.focus();
+      WinPrint.print();
+      WinPrint.close(); */
     },
   },
 };

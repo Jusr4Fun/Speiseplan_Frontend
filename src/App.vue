@@ -6,7 +6,16 @@
 export default {};
 </script>
 
-<style>
+<style scoped>
+@media print {
+  .v-content {
+    padding: 0 !important;
+  }
+  .v-main {
+    padding: 0 !important;
+  }
+}
+
 html {
   overflow: hidden;
 }

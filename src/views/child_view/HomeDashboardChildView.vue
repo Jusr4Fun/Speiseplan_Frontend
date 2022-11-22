@@ -56,15 +56,6 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col>
-        <v-card
-          class="red accent-4 fill-height white--text text-center rounded-xl0"
-          elevation="2"
-          :to="'/' + 'Support'"
-          ><v-icon size="75" color="grey darken-3">mdi-face-agent</v-icon
-          ><v-card-text class="white--text">Support</v-card-text></v-card
-        >
-      </v-col>
       <v-col v-if="isKoch">
         <v-card
           class="red accent-4 fill-height white--text text-center rounded-xl0"
@@ -74,6 +65,15 @@
           ><v-card-text class="white--text"
             >Wochenplan einstellen</v-card-text
           ></v-card
+        >
+      </v-col>
+      <v-col>
+        <v-card
+          class="red accent-4 fill-height white--text text-center rounded-xl0"
+          elevation="2"
+          :to="'/' + 'Support'"
+          ><v-icon size="75" color="grey darken-3">mdi-face-agent</v-icon
+          ><v-card-text class="white--text">Support</v-card-text></v-card
         >
       </v-col>
     </v-row>

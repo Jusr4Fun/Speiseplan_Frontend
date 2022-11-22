@@ -1,10 +1,11 @@
 import Admin from "../middleware/admin";
-export default function roleCheck(context, middleware) {
+export default function roleCheck(store, middleware) {
   var returnwert = false;
+  console.log(middleware);
   for (const role of middleware) {
     if (
-      role() == context.store.getters["auth/role"] ||
-      context.store.getters["auth/role"] == Admin()
+      role() == store.getters["auth/role"] ||
+      store.getters["auth/role"] == Admin()
     ) {
       returnwert = true;
     }

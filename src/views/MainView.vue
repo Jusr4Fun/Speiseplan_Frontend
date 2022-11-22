@@ -104,7 +104,6 @@ import store from "@/store/index";
 export default {
   name: "MainApp",
   async beforeMount() {
-    console.log(store.getters["auth/loggedIn"]);
     if (store.getters["auth/loggedIn"]) {
       this.loaded = await this.getWochen();
     } else {

@@ -299,7 +299,6 @@ router.beforeEach(async (to, from, next) => {
   const reqAuth = to.meta.requiresAuth;
   const loginQuery = { path: "/login", query: { redirect: to.fullPath } };
   if (reqAuth && !authUser) {
-    console.log("?");
     store.dispatch("auth/getAuthUser").then(() => {
       if (!store.getters["auth/authUser"]) {
         next(loginQuery);
@@ -327,7 +326,7 @@ const checkRole = function (middleware, context) {
   if (middleware.lenght == 0) {
     return context.next();
   }
-  if (roleCheck(context, middleware)) {
+  if (roleCheck(context.store, middleware)) {
     return context.next();
   } else {
     return context.next(dash);

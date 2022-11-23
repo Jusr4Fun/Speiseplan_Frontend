@@ -1,6 +1,20 @@
 <template>
   <v-container fluid id="print">
-    <v-card-title class="d-flex justify-center" elevation="2">
+    <v-card
+      class="d-flex align-start justify-end ma-2 font-weight-bold text-h6"
+      elevation="0"
+    >
+      <v-btn
+        class="mx-4 pa-md-2 d-flex justify-end"
+        dark
+        color="buttonGreen"
+        style="vertical-align: middle"
+        @click="print"
+      >
+        Drucken
+      </v-btn>
+    </v-card>
+    <v-card-title class="d-flex justify-center">
       <v-btn
         dark
         fab
@@ -25,6 +39,8 @@
         <v-icon dark>mdi-chevron-right</v-icon>
       </v-btn>
     </v-card-title>
+    <v-spacer></v-spacer>
+
     <v-row>
       <v-col
         class="d-flex align-center justify-start ma-2 font-weight-bold text-h6"
@@ -108,17 +124,6 @@
         </template>
       </v-data-table>
     </v-layout>
-    <v-row class="d-flex justify-end pa-md-6 d-print-none"
-      ><v-btn
-        class="mx-4 pa-md-2"
-        dark
-        color="buttonGreen"
-        style="vertical-align: middle"
-        @click="print"
-      >
-        Drucken
-      </v-btn>
-    </v-row>
   </v-container>
 </template>
 

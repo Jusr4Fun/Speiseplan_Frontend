@@ -58,6 +58,7 @@ export const actions = {
     await DataService.gesamtBestellungenaktWoche(wochenId)
       .then((response) => {
         commit("SET_GESAMTAKTUELLEWOCHE", response.data.data);
+        console.log(response.data.data);
       })
       .catch((error) => {
         console.log(error.data);

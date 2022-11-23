@@ -10,6 +10,8 @@ import HomeDashboardChildView from "../views/child_view/HomeDashboardChildView.v
 import AdminUserVerwaltungChildView from "../views/child_view/AdminUserVerwaltungChildView.vue";
 import TeilnehmerChildView from "../views/child_view/TeilnehmerChildView.vue";
 import MainView from "../views/MainView.vue";
+import PrintView from "../views/PrintView.vue";
+import GesamtBestellungPrintChildView from "../views/child_view/GesamtBestellungPrintChildView.vue";
 import AboutChildView from "../views/child_view/AboutChildView.vue";
 import AnmeldungView from "../views/AnmeldungView.vue";
 import PasswortVergessenChildView from "../views/child_view/PasswortVergessenChildView.vue";
@@ -198,6 +200,35 @@ const MainPages = {
   ],
 };
 
+const PrintPages = {
+  path: "/",
+  name: "PrintPages",
+  component: PrintView,
+  children: [
+    {
+      path: "/PrintGesamtBestellungen",
+      name: "PrintGesamt Bestellungen",
+      component: GesamtBestellungPrintChildView,
+      meta: {
+        icon: "mdi-basket",
+        title: "Gesamt Bestellungen Drucken",
+        requiresAuth: true,
+        middleware: [Koch],
+        metaTags: [
+          {
+            name: "description",
+            content: "Gesamt Bestellungen",
+          },
+          {
+            property: "og:description",
+            content: "Gesamt Bestellungen",
+          },
+        ],
+      },
+    },
+  ],
+};
+
 const AuthPages = {
   path: "/",
   name: "AuthPages",
@@ -283,6 +314,7 @@ const routes = [
     },
   },
   AuthPages,
+  PrintPages,
   MainPages,
 ];
 

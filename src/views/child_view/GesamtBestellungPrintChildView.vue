@@ -170,12 +170,17 @@ export default {
     };
   },
 
-  beforeMount() {
+  async beforeMount() {
     this.ausgewaehlteWoche = Object.assign(
       {},
       store.getters["data/naechsteWoche"]
     );
-    this.getData();
+    await this.getData();
+  },
+
+  async mounted() {
+    await this.getData();
+    this.print();
   },
 
   updated() {
@@ -240,8 +245,10 @@ export default {
         });
     },
 
-    print() {
-      this.$router.push({ path: "/PrintGesamtBestellungen" });
+    async print() {
+      await this.$nextTick();
+      window.print();
+      this.$router.push({ path: "/GesamtBestellungen" });
       /* // Get HTML to print from element
       const prtHtml = document.getElementById("print").innerHTML;
 

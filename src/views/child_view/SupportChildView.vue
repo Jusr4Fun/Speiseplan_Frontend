@@ -43,6 +43,8 @@
 </template>
 
 <script>
+import * as API from "@/services/API";
+
 export default {
   name: "SupportComponent",
 
@@ -57,6 +59,11 @@ export default {
 
   methods: {
     senden() {
+      var temp = {};
+      temp.details = this.nachricht;
+      temp.betreff = this.betreff;
+      temp.email = this.email;
+      API.apiClient.post(`/SupportMail`, temp);
       console.log(this.email);
       console.log(this.betreff);
       console.log(this.nachricht);

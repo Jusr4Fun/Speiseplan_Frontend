@@ -61,7 +61,7 @@
         <v-card
           class="fill-height red lighten-3 text-center rounded-xl0"
           elevation="2"
-          :to="'/' + 'Support'"
+          :to="'/' + 'SupportAuth'"
           ><v-icon size="75" color="grey darken-3">mdi-face-agent</v-icon
           ><v-card-text>Support</v-card-text></v-card
         >

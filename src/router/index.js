@@ -207,7 +207,7 @@ const PrintPages = {
   children: [
     {
       path: "/PrintGesamtBestellungen",
-      name: "PrintGesamt Bestellungen",
+      name: "PrintGesamtBestellungen",
       component: GesamtBestellungPrintChildView,
       meta: {
         icon: "mdi-basket",

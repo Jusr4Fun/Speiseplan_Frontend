@@ -5,6 +5,7 @@ export const namespaced = true;
 export const state = {
   aktuelleWoche: null,
   naechsteWoche: null,
+  gesamtBestellungenaktWoche: null,
 };
 
 export const mutations = {
@@ -13,6 +14,9 @@ export const mutations = {
   },
   SET_NAECHSTEWOCHE(state, woche) {
     state.naechsteWoche = woche;
+  },
+  SET_GESAMTAKTUELLEWOCHE(state, bestellungen) {
+    state.gesamtBestellungenaktWoche = bestellungen;
   },
 };
 
@@ -50,6 +54,15 @@ export const actions = {
         console.log(error.data);
       });
   },
+  async getGesamtBestellAktWoche({ commit }, wochenId) {
+    await DataService.gesamtBestellungenaktWoche(wochenId)
+      .then((response) => {
+        commit("SET_GESAMTAKTUELLEWOCHE", response.data.data);
+      })
+      .catch((error) => {
+        console.log(error.data);
+      });
+  },
 };
 
 export const getters = {
@@ -58,5 +71,8 @@ export const getters = {
   },
   naechsteWoche: (state) => {
     return state.naechsteWoche;
+  },
+  gesamtBestellungenaktWoche: (state) => {
+    return state.gesamtBestellungenaktWoche;
   },
 };

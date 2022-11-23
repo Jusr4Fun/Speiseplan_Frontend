@@ -170,19 +170,19 @@ export default {
     };
   },
 
-  beforeMount() {
+  async beforeMount() {
     this.ausgewaehlteWoche = Object.assign(
       {},
       store.getters["data/naechsteWoche"]
     );
-    this.getData();
+    await this.getData();
   },
 
-  updated() {
-    if (this.updated) {
+  watch: {
+    updated() {
       this.getData();
       this.updated = false;
-    }
+    },
   },
 
   methods: {
@@ -194,30 +194,24 @@ export default {
       else if (Essen == "") return "white";
     },
 
-    getData() {
+    async getData() {
       API.apiClient.get(`/wochen`).then((response) => {
         this.wochen = response.data.data;
         console.log(response.status);
         console.log(response.data.message);
       });
-      API.apiClient
-        .get(`/wochen=${this.ausgewaehlteWoche.id}=SpezialEssen`)
-        .then((response) => {
-          var temp = [{}, {}, {}, {}, {}];
-          temp[0] = response.data.data.Normal;
-          temp[1] = response.data.data.Vegetarisch;
-          temp[2] = response.data.data.Vegan;
-          temp[3] = response.data.data.Glutenfrei;
-          temp[4] = response.data.data.Laktosefrei;
-          this.bestellungGesamt = temp;
-          this.spezialBestellungen = response.data.data.teilnehmer;
-          console.log(response.status);
-          console.log(response.data.message);
-        });
+      await store
+        .dispatch("data/getGesamtBestellAktWoche", this.ausgewaehlteWoche.id)
+        .then(() => {});
+      var temp = Object.assign(
+        {},
+        await store.getters["data/gesamtBestellungenaktWoche"]
+      );
+      this.bestellungGesamt = temp.gesamtBestellungen;
+      this.spezialBestellungen = temp.teilnehmer;
     },
 
     naechsteWoche() {
-      this.updated = true;
       API.apiClient
         .get(`/woche=${this.ausgewaehlteWoche.id + 1}`)
         .then((response) => {
@@ -225,11 +219,11 @@ export default {
           console.log(response.status);
           console.log(response.data.message);
           console.log(response.data.data);
+          this.updated = true;
         });
     },
 
     vorherigeWoche() {
-      this.updated = true;
       API.apiClient
         .get(`/woche=${this.ausgewaehlteWoche.id - 1}`)
         .then((response) => {
@@ -237,43 +231,15 @@ export default {
           console.log(response.status);
           console.log(response.data.message);
           console.log(response.data.data);
+          this.updated = true;
         });
     },
 
     print() {
-      this.$router.push({ path: "/PrintGesamtBestellungen" });
-      /* // Get HTML to print from element
-      const prtHtml = document.getElementById("print").innerHTML;
-
-      // Get all stylesheets HTML
-      let stylesHtml = "";
-      for (const node of [
-        ...document.querySelectorAll('link[rel="stylesheet"], style'),
-      ]) {
-        stylesHtml += node.outerHTML;
-      }
-
-      // Open the print window
-      const WinPrint = window.open(
-        "",
-        "",
-        "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
-      );
-
-      WinPrint.document.write(`<!DOCTYPE html>
-<html>
-  <head>
-    ${stylesHtml}
-  </head>
-  <body>
-    ${prtHtml}
-  </body>
-</html>`);
-
-      WinPrint.document.close();
-      WinPrint.focus();
-      WinPrint.print();
-      WinPrint.close(); */
+      this.$router.push({
+        name: "PrintGesamtBestellungen",
+        params: { woche: this.ausgewaehlteWoche.name },
+      });
     },
   },
 };

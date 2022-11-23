@@ -7,4 +7,7 @@ export default {
   getNaechsteWoche(date) {
     return API.apiClient.post(`/naechsteWoche`, date);
   },
+  gesamtBestellungenaktWoche(id) {
+    return API.apiClient.get(`/wochen=${id}=SpezialEssen`);
+  },
 };

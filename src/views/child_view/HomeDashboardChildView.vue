@@ -164,7 +164,6 @@ export default {
       return roleCheck(store, [Nutzer]);
     },
     calcimgHeight() {
-      console.log(this.$refs.card);
       this.imgheight = this.$refs.card.$el.clientHeight - 32;
     },
   },

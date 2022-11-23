@@ -22,7 +22,7 @@ import Nutzer from "../middleware/nutzer";
 import Koch from "../middleware/koch";
 import Admin from "../middleware/admin";
 import Gast from "../middleware/gast";
-import AuthService from "@/services/AuthService";
+//import AuthService from "@/services/AuthService";
 
 Vue.use(VueRouter);
 
@@ -158,13 +158,14 @@ const MainPages = {
       },
     },
     {
-      path: "/Support",
+      path: "/SupportAuth",
       name: "Support",
       component: SupportChildView,
       meta: {
         icon: "mdi-face-agent",
         title: "Support",
-        requiresAuth: false,
+        requiresAuth: true,
+        middleware: [],
         metaTags: [
           {
             name: "description",
@@ -178,13 +179,14 @@ const MainPages = {
       },
     },
     {
-      path: "/Ueber",
+      path: "/UeberAuth",
       name: "Über",
       component: AboutChildView,
       meta: {
         icon: "mdi-information",
         title: "Über",
-        requiresAuth: false,
+        requiresAuth: true,
+        middleware: [],
         metaTags: [
           {
             name: "description",
@@ -291,6 +293,46 @@ const AuthPages = {
         ],
       },
     },
+    {
+      path: "/Support",
+      name: "Support",
+      component: SupportChildView,
+      meta: {
+        icon: "mdi-face-agent",
+        title: "Support",
+        requiresAuth: false,
+        metaTags: [
+          {
+            name: "description",
+            content: "Kontaktseite",
+          },
+          {
+            property: "og:description",
+            content: "Kontaktseite",
+          },
+        ],
+      },
+    },
+    {
+      path: "/Ueber",
+      name: "Über",
+      component: AboutChildView,
+      meta: {
+        icon: "mdi-information",
+        title: "Über",
+        requiresAuth: false,
+        metaTags: [
+          {
+            name: "description",
+            content: "Kontaktseite",
+          },
+          {
+            property: "og:description",
+            content: "Kontaktseite",
+          },
+        ],
+      },
+    },
   ],
 };
 
@@ -341,21 +383,14 @@ router.beforeEach(async (to, from, next) => {
   } else if (reqAuth) {
     checkRole(middleware, context);
   } else {
-    if (to.matched[0].name != "AuthPages") {
-      console.log("klar");
-      if (AuthService.login()) {
-        await store.dispatch("auth/getAuthUser");
-      }
-    } else {
-      AuthService.login();
-    }
     next();
   }
 });
 
 const checkRole = function (middleware, context) {
+  console.log(middleware.lenght);
   const dash = { path: "/dashboard", query: { redirect: context.to.fullPath } };
-  if (middleware.lenght == 0) {
+  if (middleware.lenght == undefined) {
     return context.next();
   }
   if (roleCheck(context.store, middleware)) {

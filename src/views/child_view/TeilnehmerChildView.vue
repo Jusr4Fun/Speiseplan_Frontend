@@ -210,6 +210,7 @@ export default {
         });
     },
     updateTeilnehmer() {
+      console.log(this.editedItem);
       API.apiClient
         .post(`/updateTeilnehmer`, this.editedItem)
         .then((response) => {

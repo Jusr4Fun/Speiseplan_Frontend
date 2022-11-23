@@ -84,6 +84,10 @@ export default {
       this.error = null;
       await AuthService.login(payload);
     },
+
+    support() {
+      this.$router.push({ path: "/PrintGesamtBestellungen" });
+    },
   },
 };
 </script>

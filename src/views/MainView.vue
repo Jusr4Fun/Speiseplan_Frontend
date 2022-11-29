@@ -119,7 +119,7 @@ export default {
               Admin() == store.getters["auth/role"]
             ) {
               this.items.push({
-                name: childroute.name,
+                name: childroute.meta.title,
                 path: childroute.path,
                 icon: childroute.meta.icon,
               });
@@ -127,7 +127,7 @@ export default {
               for (const role of childroute.meta.middleware) {
                 if (role() == store.getters["auth/role"]) {
                   this.items.push({
-                    name: childroute.name,
+                    name: childroute.meta.title,
                     path: childroute.path,
                     icon: childroute.meta.icon,
                   });
@@ -142,7 +142,7 @@ export default {
           route.children.forEach((childroute) => {
             if (!childroute.meta.requiresAuth) {
               this.items.push({
-                name: childroute.name,
+                name: childroute.meta.title,
                 path: childroute.path,
                 icon: childroute.meta.icon,
               });

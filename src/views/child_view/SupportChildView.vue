@@ -53,8 +53,15 @@ export default {
       email: "",
       betreff: "",
       nachricht: "",
+      user: {},
       inputRules: [(v) => !!v || "Benötigt."],
     };
+  },
+
+  mounted() {
+    this.user = Object.assign({}, this.$store.getters["auth/authUser"]);
+    console.log(this.user);
+    this.email = this.user.email;
   },
 
   methods: {
@@ -63,6 +70,7 @@ export default {
       temp.details = this.nachricht;
       temp.betreff = this.betreff;
       temp.email = this.email;
+      temp.user = this.user;
       API.apiClient.post(`/SupportMail`, temp);
       console.log(this.email);
       console.log(this.betreff);

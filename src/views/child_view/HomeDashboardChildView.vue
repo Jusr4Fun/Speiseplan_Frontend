@@ -12,7 +12,7 @@
       </v-col>
       <v-col v-if="isNutzer">
         <v-card
-          class="fill-height amber lighten-3 text-center rounded-xl0"
+          class="fill-height cyan lighten-3 text-center rounded-xl0"
           elevation="2"
           :to="'/' + 'Teilnehmer'"
           ><v-icon size="75" color="grey darken-3">mdi-account-group</v-icon
@@ -21,10 +21,11 @@
       </v-col>
       <v-col>
         <v-card
-          class="fill-height lime lighten-3 text-center rounded-xl0"
+          class="fill-height amber lighten-3 text-center rounded-xl0"
           elevation="2"
-          ><v-icon size="75" color="grey darken-3">mdi-account-plus</v-icon
-          ><v-card-text> {{ ausgewaehlteWoche.name }}</v-card-text></v-card
+          ><v-card-text class="text-h2 text-center font-weight-bold">
+            {{ ausgewaehlteWoche.name }}</v-card-text
+          ></v-card
         >
       </v-col>
       <v-col v-if="isNutzer">
@@ -82,6 +83,7 @@
                 class="ma-4"
                 elevation="2"
                 color="buttonGreen"
+                @click="vorherigeWoche"
               >
                 <v-icon dark>mdi-chevron-left</v-icon>
               </v-btn>
@@ -92,7 +94,7 @@
                 class="ma-4"
                 elevation="2"
                 color="buttonGreen"
-                @click="calcimgHeight"
+                @click="naechsteWoche"
               >
                 <v-icon dark>mdi-chevron-right</v-icon>
               </v-btn>
@@ -125,6 +127,7 @@ import roleCheck from "@/router/roleCheck";
 import Nutzer from "@/middleware/nutzer";
 import Koch from "@/middleware/koch";
 import store from "@/store/index";
+import * as API from "@/services/API";
 export default {
   name: "Dashboard-View",
   data() {
@@ -152,9 +155,9 @@ export default {
     this.calcimgHeight();
   },
 
-  beforeUpdate() {
+  /* beforeUpdate() {
     this.calcimgHeight();
-  },
+  }, */
 
   methods: {
     istKoch() {
@@ -165,6 +168,29 @@ export default {
     },
     calcimgHeight() {
       this.imgheight = this.$refs.card.$el.clientHeight - 32;
+    },
+    naechsteWoche() {
+      API.apiClient
+        .get(`/woche=${this.ausgewaehlteWoche.id + 1}`)
+        .then((response) => {
+          this.ausgewaehlteWoche = response.data.data;
+          console.log(response.status);
+          console.log(response.data.message);
+          console.log(response.data.data);
+          this.updated = true;
+        });
+    },
+
+    vorherigeWoche() {
+      API.apiClient
+        .get(`/woche=${this.ausgewaehlteWoche.id - 1}`)
+        .then((response) => {
+          this.ausgewaehlteWoche = response.data.data;
+          console.log(response.status);
+          console.log(response.data.message);
+          console.log(response.data.data);
+          this.updated = true;
+        });
     },
   },
 };

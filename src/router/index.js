@@ -11,6 +11,7 @@ import AdminUserVerwaltungChildView from "../views/child_view/AdminUserVerwaltun
 import TeilnehmerChildView from "../views/child_view/TeilnehmerChildView.vue";
 import MainView from "../views/MainView.vue";
 import PrintView from "../views/PrintView.vue";
+import SpeiseplanUploadChildView from "../views/child_view/SpeiseplanUploadChildView.vue";
 import GesamtBestellungPrintChildView from "../views/child_view/GesamtBestellungPrintChildView.vue";
 import AboutChildView from "../views/child_view/AboutChildView.vue";
 import AnmeldungView from "../views/AnmeldungView.vue";
@@ -158,14 +159,35 @@ const MainPages = {
       },
     },
     {
+      path: "/Upload",
+      name: "Upload",
+      component: SpeiseplanUploadChildView,
+      meta: {
+        icon: "mdi-file-upload",
+        title: "Upload",
+        requiresAuth: true,
+        middleware: [Koch],
+        metaTags: [
+          {
+            name: "description",
+            content: "Kontaktseite",
+          },
+          {
+            property: "og:description",
+            content: "Kontaktseite",
+          },
+        ],
+      },
+    },
+    {
       path: "/SupportAuth",
-      name: "Support",
+      name: "SupportAngemeldet",
       component: SupportChildView,
       meta: {
         icon: "mdi-face-agent",
         title: "Support",
         requiresAuth: true,
-        middleware: [],
+        middleware: [Nutzer, Gast, Koch],
         metaTags: [
           {
             name: "description",
@@ -180,13 +202,13 @@ const MainPages = {
     },
     {
       path: "/UeberAuth",
-      name: "Über",
+      name: "ÜberAngemeldet",
       component: AboutChildView,
       meta: {
         icon: "mdi-information",
         title: "Über",
         requiresAuth: true,
-        middleware: [],
+        middleware: [Nutzer, Gast, Koch],
         metaTags: [
           {
             name: "description",
@@ -388,9 +410,8 @@ router.beforeEach(async (to, from, next) => {
 });
 
 const checkRole = function (middleware, context) {
-  console.log(middleware.lenght);
   const dash = { path: "/dashboard", query: { redirect: context.to.fullPath } };
-  if (middleware.lenght == undefined) {
+  if (middleware.length == undefined) {
     return context.next();
   }
   if (roleCheck(context.store, middleware)) {

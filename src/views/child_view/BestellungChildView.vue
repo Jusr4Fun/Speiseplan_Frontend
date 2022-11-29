@@ -286,8 +286,10 @@ export default {
     return {
       inputDialog: false,
       updated: false,
+      inBearbeitung: false,
       loadingSpecial: true,
       wochenBestellungID: null,
+      timer: null,
       typs: ["", "Vegan", "Vegetarisch", "Glutenfrei", "Laktosefrei"],
       teilnehmer: {},
       defaultItem: {
@@ -378,8 +380,8 @@ export default {
       this.loadingSpecial = false;
     },
 
-    getData() {
-      API.apiClient
+    async getData() {
+      await API.apiClient
         .get(
           `/abteilung/${this.user.abteilung_id}/woche/${this.ausgewaehlteWoche.id}`
         )
@@ -399,7 +401,9 @@ export default {
           }
         });
       API.apiClient
-        .get(`/abteilungTeilnehmerName=${this.user.abteilung_id}`)
+        .get(
+          `/abteilungTeilnehmerName/${this.user.abteilung_id}/Bestellung/${this.wochenBestellungID}`
+        )
         .then((response) => {
           console.log(response.data.data);
           this.teilnehmer = response.data.data;
@@ -409,6 +413,7 @@ export default {
     },
 
     naechsteWoche() {
+      this.timerinterval();
       this.updated = true;
       API.apiClient
         .get(`/woche=${this.ausgewaehlteWoche.id + 1}`)
@@ -420,6 +425,7 @@ export default {
     },
 
     vorherigeWoche() {
+      this.timerinterval();
       this.updated = true;
       API.apiClient
         .get(`/woche=${this.ausgewaehlteWoche.id - 1}`)
@@ -430,20 +436,38 @@ export default {
         });
     },
 
+    timerinterval() {
+      this.inBearbeitung = false;
+      this.speicherAenderungen();
+    },
+
     speicherAenderungen() {
-      var tempUebergabe = {};
-      tempUebergabe.normal = this.normal;
-      tempUebergabe.spezial = this.spezialBestellung;
-      tempUebergabe.woche_id = this.ausgewaehlteWoche.id;
-      tempUebergabe.abteilung_id = this.user.abteilung_id;
-      tempUebergabe.bestellungs_id = this.wochenBestellungID;
-      API.apiClient.post(`/updateOrCreateWochenBestellung`, tempUebergabe);
+      if (this.inBearbeitung) {
+        if (this.timer) {
+          clearTimeout(this.timer);
+        }
+        this.timer = setTimeout(this.timerinterval, 2000);
+      } else {
+        var tempUebergabe = {};
+        tempUebergabe.normal = this.normal;
+        tempUebergabe.spezial = this.spezialBestellung;
+        tempUebergabe.woche_id = this.ausgewaehlteWoche.id;
+        tempUebergabe.abteilung_id = this.user.abteilung_id;
+        tempUebergabe.bestellungs_id = this.wochenBestellungID;
+        this.inBearbeitung = true;
+        API.apiClient.post(`/updateOrCreateWochenBestellung`, tempUebergabe);
+      }
     },
 
     onFilter(item) {
       console.log(item);
       return item.name;
     },
+  },
+  beforeRouteLeave: function (to, from, next) {
+    console.log("Saving Changes before Leaving");
+    this.timerinterval();
+    next();
   },
   watch: {
     spezialBestellung: {

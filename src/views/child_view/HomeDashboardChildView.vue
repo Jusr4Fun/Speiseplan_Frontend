@@ -75,7 +75,7 @@
           ref="card"
         >
           <v-card-text>
-            <v-img :height="imgheight" src="@/assets/pics/kw47.jpg" contain>
+            <v-img :height="imgheight" :src="image" contain>
               <v-btn
                 dark
                 fab
@@ -128,6 +128,7 @@ import Nutzer from "@/middleware/nutzer";
 import Koch from "@/middleware/koch";
 import store from "@/store/index";
 import * as API from "@/services/API";
+import { Buffer } from "buffer";
 export default {
   name: "Dashboard-View",
   data() {
@@ -136,6 +137,7 @@ export default {
       isNutzer: false,
       ausgewaehlteWoche: {},
       imgheight: 600,
+      image: null,
     };
   },
 
@@ -152,6 +154,7 @@ export default {
   },
 
   mounted() {
+    this.loadImage();
     this.calcimgHeight();
   },
 
@@ -180,7 +183,19 @@ export default {
           this.updated = true;
         });
     },
-
+    loadImage() {
+      API.apiClient
+        .get(`/ImageWoche/${this.ausgewaehlteWoche.id}`, {
+          responseType: "arraybuffer",
+        })
+        .then((response) => {
+          console.log(response);
+          this.image =
+            "data:image/jpeg;base64," +
+            Buffer.from(response.data, "binary").toString("base64");
+          console.log(response.status);
+        });
+    },
     vorherigeWoche() {
       API.apiClient
         .get(`/woche=${this.ausgewaehlteWoche.id - 1}`)
@@ -191,6 +206,14 @@ export default {
           console.log(response.data.data);
           this.updated = true;
         });
+    },
+  },
+  watch: {
+    ausgewaehlteWoche: {
+      deep: true,
+      handler() {
+        this.loadImage();
+      },
     },
   },
 };

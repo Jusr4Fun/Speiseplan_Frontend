@@ -448,7 +448,7 @@ export default {
         }
         this.timer = setTimeout(this.timerinterval, 2000);
       } else {
-        var tempUebergabe = {};
+        const tempUebergabe = {};
         tempUebergabe.normal = this.normal;
         tempUebergabe.spezial = this.spezialBestellung;
         tempUebergabe.woche_id = this.ausgewaehlteWoche.id;

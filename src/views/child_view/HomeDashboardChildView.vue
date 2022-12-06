@@ -53,7 +53,7 @@
         <v-card
           class="fill-height teal lighten-3 text-center rounded-xl0"
           elevation="2"
-          :to="'/' + 'Teilnehmer'"
+          :to="'/' + 'Upload'"
           ><v-icon size="75" color="grey darken-3">mdi-calendar-plus</v-icon
           ><v-card-text>Wochenplan einstellen</v-card-text></v-card
         >

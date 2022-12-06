@@ -115,13 +115,6 @@ export default {
           divider: true,
         },
         { text: "Freitag", value: "Freitag", align: "center", divider: true },
-        {
-          text: "Gesamt",
-          value: "Gesamt",
-          align: "center",
-          sortable: false,
-          divider: true,
-        },
       ],
     };
   },

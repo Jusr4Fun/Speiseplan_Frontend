@@ -1,46 +1,75 @@
 <template>
   <v-container fluid id="print">
-    <v-card
-      class="d-flex align-start justify-end ma-2 font-weight-bold text-h6"
-      elevation="0"
-    >
-      <v-btn
-        class="mx-4 pa-md-2 d-flex justify-end"
-        dark
-        color="buttonGreen"
-        style="vertical-align: middle"
-        @click="print"
+    <v-row class="d-flex align-start justify-space-around" dense>
+      <v-card
+        class="card text-center text-h6"
+        elevation="0"
+        height="300"
+        width="400"
       >
-        Drucken
-      </v-btn>
-    </v-card>
-    <v-card-title class="d-flex justify-center">
-      <v-btn
-        dark
-        fab
-        small
-        class="ma-4"
-        @click="vorherigeWoche"
-        elevation="2"
-        color="buttonGreen"
-      >
-        <v-icon dark>mdi-chevron-left</v-icon>
-      </v-btn>
-      <div>{{ ausgewaehlteWoche.name }}</div>
-      <v-btn
-        dark
-        fab
-        small
-        class="ma-4"
-        @click="naechsteWoche"
-        elevation="2"
-        color="buttonGreen"
-      >
-        <v-icon dark>mdi-chevron-right</v-icon>
-      </v-btn>
-    </v-card-title>
-    <v-spacer></v-spacer>
-
+        <v-data-table
+          no-gutters
+          dense
+          :headers="abteilungHeader"
+          :items="abteilungStatus"
+          no-data-text="noch keine Daten Eingetragen"
+          hide-default-footer
+        >
+        </v-data-table>
+      </v-card>
+      <v-card class="card text-h6" elevation="0" width="300">
+        <v-row class="d-flex justify-center">
+          <v-card elevation="0">
+            <v-btn
+              dark
+              fab
+              small
+              class="ma-4"
+              @click="vorherigeWoche"
+              elevation="2"
+              color="buttonGreen"
+            >
+              <v-icon dark>mdi-chevron-left</v-icon>
+            </v-btn>
+            {{ ausgewaehlteWoche.name }}
+            <v-btn
+              dark
+              fab
+              small
+              class="ma-4"
+              @click="naechsteWoche"
+              elevation="2"
+              color="buttonGreen"
+            >
+              <v-icon dark>mdi-chevron-right</v-icon>
+            </v-btn>
+          </v-card>
+        </v-row>
+        <v-row class="d-flex justify-center text-center">
+          <v-card
+            class="card text-center text-h6"
+            elevation="0"
+            height="100"
+            width="400"
+          >
+            Datum Wochenanfang <br />
+            - <br />
+            Datum Wochenende
+          </v-card>
+        </v-row>
+      </v-card>
+      <v-card class="card text-center" elevation="0" height="100" width="400">
+        <v-btn
+          class="ma-4 text-center"
+          dark
+          color="buttonGreen"
+          elevation="2"
+          @click="print"
+        >
+          Drucken
+        </v-btn>
+      </v-card>
+    </v-row>
     <v-row>
       <v-col
         class="d-flex align-center justify-start ma-2 font-weight-bold text-h6"
@@ -141,6 +170,7 @@ export default {
       wochen: [],
       spezialBestellungen: [],
       bestellungGesamt: [],
+      abteilungStatus: [],
       spezialheader: [
         { text: "Name", value: "Name", sortable: false },
         { text: "Montag", value: "Montag", align: "center", sortable: false },
@@ -171,6 +201,10 @@ export default {
         { text: "Mittwoch", value: "Mittwoch", align: "center" },
         { text: "Donnerstag", value: "Donnerstag", align: "center" },
         { text: "Freitag", value: "Freitag", align: "center" },
+      ],
+      abteilungHeader: [
+        { text: "Abteilung", value: "name" },
+        { text: "Bestellt", value: "Bestellt" },
       ],
     };
   },
@@ -214,6 +248,7 @@ export default {
       );
       this.bestellungGesamt = temp.gesamtBestellungen;
       this.spezialBestellungen = temp.teilnehmer;
+      this.abteilungStatus = temp.abteilungen;
     },
 
     naechsteWoche() {
@@ -249,3 +284,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.v-data-table >>> td {
+  font-size: 13px !important;
+}
+</style>

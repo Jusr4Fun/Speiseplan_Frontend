@@ -1,30 +1,48 @@
 <template>
   <v-container fluid>
-    <v-card-title class="d-flex justify-center" elevation="2">
-      <v-btn
-        dark
-        fab
-        small
-        class="ma-4"
-        @click="vorherigeWoche"
-        elevation="2"
-        color="buttonGreen"
-      >
-        <v-icon dark>mdi-chevron-left</v-icon>
-      </v-btn>
-      <div>{{ ausgewaehlteWoche.name }}</div>
-      <v-btn
-        dark
-        fab
-        small
-        class="ma-4"
-        @click="naechsteWoche"
-        elevation="2"
-        color="buttonGreen"
-      >
-        <v-icon dark>mdi-chevron-right</v-icon>
-      </v-btn>
-    </v-card-title>
+    <v-row class="justify-center mt-6">
+      <v-card class="card text-h6" elevation="0" width="300">
+        <v-row class="d-flex justify-center">
+          <v-card elevation="0">
+            <v-btn
+              dark
+              fab
+              small
+              class="ma-4"
+              @click="vorherigeWoche"
+              elevation="2"
+              color="buttonGreen"
+            >
+              <v-icon dark>mdi-chevron-left</v-icon>
+            </v-btn>
+            {{ ausgewaehlteWoche.name }}
+            <v-btn
+              dark
+              fab
+              small
+              class="ma-4"
+              @click="naechsteWoche"
+              elevation="2"
+              color="buttonGreen"
+            >
+              <v-icon dark>mdi-chevron-right</v-icon>
+            </v-btn>
+          </v-card>
+        </v-row>
+        <v-row class="d-flex justify-center text-center">
+          <v-card
+            class="card text-center text-h6"
+            elevation="0"
+            height="100"
+            width="400"
+          >
+            {{ ausgewaehlteWoche.wochenanfang }}
+            -
+            {{ ausgewaehlteWoche.wochenende }}
+          </v-card>
+        </v-row>
+      </v-card>
+    </v-row>
     <v-layout child-flex>
       <v-data-table
         class="ma-2 elevation-1"
@@ -95,7 +113,6 @@
         :headers="header"
         :items="spezialBestellung"
         class="elevation-1 ma-2"
-        :loading="loadingSpecial"
         loading-text="Laden... Bitte Warten"
         no-data-text="noch keine Daten Eingetragen"
         hide-default-footer
@@ -219,6 +236,27 @@
                     </v-card>
                   </template>
                 </v-dialog>
+                <v-dialog v-model="dialogDelete" max-width="500px">
+                  <v-card>
+                    <v-card-title class="text-h5 , justify-center">
+                      Löschen Bestätigen
+                    </v-card-title>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="blue darken-1" text @click="close">
+                        Schließen
+                      </v-btn>
+                      <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="deleteSpezialBestellung"
+                      >
+                        OK
+                      </v-btn>
+                      <v-spacer></v-spacer>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </v-card-title>
             </v-row>
           </v-toolbar>
@@ -271,6 +309,17 @@
             </template>
           </v-select>
         </template>
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-hover v-slot="{ hover }">
+            <v-icon
+              class="mr-2"
+              @click="deleteItem(item)"
+              :style="{ color: hover ? 'red' : '' }"
+            >
+              mdi-delete
+            </v-icon>
+          </v-hover>
+        </template>
       </v-data-table>
     </v-layout>
   </v-container>
@@ -285,13 +334,16 @@ export default {
   data() {
     return {
       inputDialog: false,
+      dialogDelete: false,
       updated: false,
       inBearbeitung: false,
       loadingSpecial: true,
       wochenBestellungID: null,
+      updateManual: false,
       timer: null,
       typs: ["", "Vegan", "Vegetarisch", "Glutenfrei", "Laktosefrei"],
       teilnehmer: {},
+      editedIndex: -1,
       defaultItem: {
         Name: " ",
         Montag: " ",
@@ -335,20 +387,25 @@ export default {
           sortable: false,
         },
         { text: "Freitag", value: "Freitag", width: "15%", sortable: false },
+        {
+          text: "",
+          value: "actions",
+          sortable: false,
+          align: "end",
+        },
       ],
       user: {},
     };
   },
   async beforeMount() {
+    this.updateManual = true;
     this.user = Object.assign({}, store.getters["auth/authUser"]);
     this.ausgewaehlteWoche = Object.assign(
       {},
       store.getters["data/naechsteWoche"]
     );
     await this.getData();
-  },
-  mounted() {
-    this.fillSpecialBestellung();
+    this.updateManual = false;
   },
 
   updated() {
@@ -367,17 +424,16 @@ export default {
       else if (Essen == "") return "white";
     },
     speichern() {
-      console.log(this.editedItem);
-      this.spezialBestellung.push(Object.assign({}, this.editedItem));
-      this.editedItem = this.defaultItem;
-      this.inputDialog = false;
+      if (this.editedItem.Name != " ") {
+        this.spezialBestellung.push(Object.assign({}, this.editedItem));
+        this.editedItem = this.defaultItem;
+        this.inputDialog = false;
+      }
     },
     close() {
       this.editedItem = this.defaultItem;
       this.inputDialog = false;
-    },
-    fillSpecialBestellung() {
-      this.loadingSpecial = false;
+      this.dialogDelete = false;
     },
 
     async getData() {
@@ -394,7 +450,6 @@ export default {
             console.log(response.statusText);
           } else {
             console.log(response.data.message);
-            console.log(response.data.data);
             this.normal = response.data.data.normal;
             this.wochenBestellungID = response.data.data.id;
             this.spezialBestellung = response.data.data.spezial_essen;
@@ -405,7 +460,6 @@ export default {
           `/abteilungTeilnehmerName/${this.user.abteilung_id}/Bestellung/${this.wochenBestellungID}`
         )
         .then((response) => {
-          console.log(response.data.data);
           this.teilnehmer = response.data.data;
           console.log(response.status);
           console.log(response.data.message);
@@ -441,33 +495,77 @@ export default {
       this.speicherAenderungen();
     },
 
-    speicherAenderungen() {
-      if (this.inBearbeitung) {
-        if (this.timer) {
-          clearTimeout(this.timer);
+    async speicherAenderungen() {
+      if (!this.updateManual) {
+        if (this.inBearbeitung) {
+          if (this.timer) {
+            clearTimeout(this.timer);
+          }
+          this.timer = setTimeout(this.timerinterval, 2000);
+        } else {
+          const tempUebergabe = {};
+          tempUebergabe.normal = this.normal;
+          tempUebergabe.spezial = this.spezialBestellung;
+          tempUebergabe.woche_id = this.ausgewaehlteWoche.id;
+          tempUebergabe.abteilung_id = this.user.abteilung_id;
+          tempUebergabe.bestellungs_id = this.wochenBestellungID;
+          this.inBearbeitung = true;
+          await API.apiClient.post(
+            `/updateOrCreateWochenBestellung`,
+            tempUebergabe
+          );
+          await API.apiClient
+            .get(
+              `/abteilungTeilnehmerName/${this.user.abteilung_id}/Bestellung/${this.wochenBestellungID}`
+            )
+            .then((response) => {
+              this.teilnehmer = response.data.data;
+              console.log(response.status);
+              console.log(response.data.message);
+            });
         }
-        this.timer = setTimeout(this.timerinterval, 2000);
-      } else {
-        const tempUebergabe = {};
-        tempUebergabe.normal = this.normal;
-        tempUebergabe.spezial = this.spezialBestellung;
-        tempUebergabe.woche_id = this.ausgewaehlteWoche.id;
-        tempUebergabe.abteilung_id = this.user.abteilung_id;
-        tempUebergabe.bestellungs_id = this.wochenBestellungID;
-        this.inBearbeitung = true;
-        API.apiClient.post(`/updateOrCreateWochenBestellung`, tempUebergabe);
       }
     },
 
     onFilter(item) {
-      console.log(item);
       return item.name;
+    },
+
+    deleteItem(item) {
+      this.editedIndex = this.spezialBestellung.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
+    },
+
+    async deleteSpezialBestellung() {
+      const tempUebergabe = {};
+      tempUebergabe.spezialBestellung = this.editedItem;
+      tempUebergabe.bestellungs_id = this.wochenBestellungID;
+      await API.apiClient.post(`/deleteSpezialEssen`, tempUebergabe);
+      this.editedItem = this.defaultItem;
+      this.dialogDelete = false;
+      this.updateManual = true;
+      this.getData();
+    },
+
+    async saveBeforeLeave(next) {
+      const tempUebergabe = {};
+      tempUebergabe.normal = this.normal;
+      tempUebergabe.spezial = this.spezialBestellung;
+      tempUebergabe.woche_id = this.ausgewaehlteWoche.id;
+      tempUebergabe.abteilung_id = this.user.abteilung_id;
+      tempUebergabe.bestellungs_id = this.wochenBestellungID;
+      this.inBearbeitung = true;
+      await API.apiClient.post(
+        `/updateOrCreateWochenBestellung`,
+        tempUebergabe
+      );
+      next();
     },
   },
   beforeRouteLeave: function (to, from, next) {
     console.log("Saving Changes before Leaving");
-    this.timerinterval();
-    next();
+    this.saveBeforeLeave(next);
   },
   watch: {
     spezialBestellung: {

@@ -2,21 +2,21 @@
   <v-container class="fill-height" fluid>
     <v-row class="d-flex text-center align-start justify-space-around" dense>
       <v-card
-        class="card text-center h1"
+        class="card text-center text-h4"
         elevation="0"
         height="100"
-        width="200"
-      >
-        Datum Wochenanfang <br />
-        - <br />
-        Datum Wochenende
+        width="400"
+        ><v-card-text class="text-center text-h4 black--text">
+          {{ ausgewaehlteWoche.wochenanfang }}
+          -
+          {{ ausgewaehlteWoche.wochenende }}
+        </v-card-text>
       </v-card>
-      <v-card class="card" elevation="0" width="300">
+      <v-card class="card text-h4" elevation="0" width="400">
         <div>
           <v-btn
             dark
             fab
-            small
             class="ma-4"
             @click="vorherigeWoche"
             elevation="2"
@@ -28,7 +28,6 @@
           <v-btn
             dark
             fab
-            small
             class="ma-4"
             @click="naechsteWoche"
             elevation="2"
@@ -38,7 +37,7 @@
           </v-btn>
         </div>
       </v-card>
-      <v-card class="card" elevation="0" height="100" width="200">
+      <v-card class="card" elevation="0" height="100" width="400">
         <v-btn
           dark
           class="ma-4"
@@ -84,6 +83,7 @@
 .card {
   background-color: #b0bec5;
 }
+
 .container {
   background-color: #b0bec5;
 }

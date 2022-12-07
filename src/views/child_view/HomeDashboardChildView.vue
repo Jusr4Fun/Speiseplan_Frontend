@@ -6,25 +6,45 @@
           class="fill-height yellow lighten-3 text-center rounded-xl0"
           elevation="2"
           :to="'/' + 'Bestellungen'"
-          ><v-icon size="75" color="grey darken-3">mdi-calendar-today</v-icon
-          ><v-card-text>Bestellung nächste Woche</v-card-text>
+        >
+          <v-card-text>
+            <v-row class="d-flex justify-center text-center">
+              <v-icon size="75" color="grey darken-3">
+                mdi-calendar-today
+              </v-icon>
+            </v-row>
+            <v-row class="d-flex justify-center text-center text-h4">
+              Bestellung nächste Woche
+            </v-row>
+          </v-card-text>
         </v-card>
       </v-col>
       <v-col v-if="isNutzer">
         <v-card
-          class="fill-height cyan lighten-3 text-center rounded-xl0"
+          class="fill-height cyan lighten-3 rounded-xl0"
           elevation="2"
           :to="'/' + 'Teilnehmer'"
-          ><v-icon size="75" color="grey darken-3">mdi-account-group</v-icon
-          ><v-card-text>Teilnehmer</v-card-text></v-card
-        >
+          ><v-card-text>
+            <v-row class="d-flex justify-center text-center">
+              <v-icon size="75" color="grey darken-3">mdi-account-group</v-icon>
+            </v-row>
+            <v-row class="d-flex justify-center text-center text-h4">
+              Teilnehmer
+            </v-row>
+          </v-card-text>
+        </v-card>
       </v-col>
       <v-col>
         <v-card
           class="fill-height amber lighten-3 text-center rounded-xl0"
           elevation="2"
           ><v-card-text class="text-h2 text-center font-weight-bold">
-            {{ ausgewaehlteWoche.name }}</v-card-text
+            {{ ausgewaehlteWoche.name }} <br />
+            <div class="text-h6">
+              {{ ausgewaehlteWoche.wochenanfang }}
+              -
+              {{ ausgewaehlteWoche.wochenende }}
+            </div></v-card-text
           ></v-card
         >
       </v-col>
@@ -33,9 +53,16 @@
           class="fill-height green lighten-3 text-center rounded-xl0"
           elevation="2"
           :to="'/' + 'Teilnehmer'"
-          ><v-icon size="75" color="grey darken-3">mdi-account-plus</v-icon>
-          <v-card-text>Teilnehmer hinzufügen</v-card-text></v-card
         >
+          <v-card-text>
+            <v-row class="d-flex justify-center text-center">
+              <v-icon size="75" color="grey darken-3">mdi-account-plus</v-icon>
+            </v-row>
+            <v-row class="d-flex justify-center text-center text-h4">
+              Teilnehmer hinzufügen
+            </v-row>
+          </v-card-text>
+        </v-card>
       </v-col>
       <v-col v-if="isKoch">
         <v-card
@@ -43,10 +70,16 @@
           elevation="2"
           :to="'/' + 'GesamtBestellungen'"
         >
-          <v-icon size="75" color="grey darken-3">
-            mdi-clipboard-text-outline
-          </v-icon>
-          <v-card-text> Gesammte Bestellungen anzeigen </v-card-text>
+          <v-card-text>
+            <v-row class="d-flex justify-center text-center">
+              <v-icon size="75" color="grey darken-3">
+                mdi-clipboard-text-outline
+              </v-icon>
+            </v-row>
+            <v-row class="d-flex justify-center text-center text-h4">
+              Gesammte Bestellungen anzeigen
+            </v-row>
+          </v-card-text>
         </v-card>
       </v-col>
       <v-col v-if="isKoch">
@@ -54,18 +87,32 @@
           class="fill-height teal lighten-3 text-center rounded-xl0"
           elevation="2"
           :to="'/' + 'Upload'"
-          ><v-icon size="75" color="grey darken-3">mdi-calendar-plus</v-icon
-          ><v-card-text>Wochenplan einstellen</v-card-text></v-card
         >
+          <v-card-text>
+            <v-row class="d-flex justify-center text-center">
+              <v-icon size="75" color="grey darken-3">mdi-calendar-plus</v-icon>
+            </v-row>
+            <v-row class="d-flex justify-center text-center text-h4">
+              Wochenplan einstellen
+            </v-row>
+          </v-card-text>
+        </v-card>
       </v-col>
       <v-col>
         <v-card
           class="fill-height red lighten-3 text-center rounded-xl0"
           elevation="2"
           :to="'/' + 'SupportAuth'"
-          ><v-icon size="75" color="grey darken-3">mdi-face-agent</v-icon
-          ><v-card-text>Support</v-card-text></v-card
         >
+          <v-card-text>
+            <v-row class="d-flex justify-center text-center">
+              <v-icon size="75" color="grey darken-3">mdi-face-agent</v-icon>
+            </v-row>
+            <v-row class="d-flex justify-center text-center text-h4">
+              Support
+            </v-row>
+          </v-card-text>
+        </v-card>
       </v-col>
     </v-row>
     <v-row dense>

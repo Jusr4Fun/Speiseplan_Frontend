@@ -44,6 +44,7 @@
 
 <script>
 import * as API from "@/services/API";
+import * as Auth from "@/services/AuthService";
 
 export default {
   name: "SupportComponent",
@@ -65,13 +66,14 @@ export default {
   },
 
   methods: {
-    senden() {
+    async senden() {
+      await Auth.authClient.get("/sanctum/csrf-cookie");
       var temp = {};
       temp.details = this.nachricht;
       temp.betreff = this.betreff;
       temp.email = this.email;
       temp.user = this.user;
-      API.apiClient.post(`/SupportMail`, temp);
+      API.apiClient.post(`/SupportMail`, temp, { withCredentials: true });
       console.log(this.email);
       console.log(this.betreff);
       console.log(this.nachricht);

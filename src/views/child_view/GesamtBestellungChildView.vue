@@ -52,9 +52,9 @@
             height="100"
             width="400"
           >
-            Datum Wochenanfang <br />
-            - <br />
-            Datum Wochenende
+            {{ ausgewaehlteWoche.wochenanfang }}
+            -
+            {{ ausgewaehlteWoche.wochenende }}
           </v-card>
         </v-row>
       </v-card>
@@ -167,7 +167,6 @@ export default {
       typs: ["Vegan", "Vegetarisch", "Glutenfrei", "Laktosefrei"],
       updated: false,
       ausgewaehlteWoche: {},
-      wochen: [],
       spezialBestellungen: [],
       bestellungGesamt: [],
       abteilungStatus: [],
@@ -234,11 +233,6 @@ export default {
     },
 
     async getData() {
-      API.apiClient.get(`/wochen`).then((response) => {
-        this.wochen = response.data.data;
-        console.log(response.status);
-        console.log(response.data.message);
-      });
       await store
         .dispatch("data/getGesamtBestellAktWoche", this.ausgewaehlteWoche.id)
         .then(() => {});

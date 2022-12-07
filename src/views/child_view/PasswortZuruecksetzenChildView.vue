@@ -2,7 +2,7 @@
   <v-container fill-height fluid>
     <v-layout align-center justify-center>
       <v-flex xs12 sm8 md4>
-        <v-card class="elevation-12" v-on:keyup.enter="login">
+        <v-card class="elevation-2" v-on:keyup.enter="login">
           <v-toolbar dark color="secondary">
             <v-toolbar-title>Passwort wiederherrstellen</v-toolbar-title>
           </v-toolbar>
@@ -18,43 +18,49 @@
               >
               </v-text-field>
               <v-text-field
-                id="password"
                 prepend-icon="mdi-lock"
                 name="password"
                 label="Neues Passwort"
                 v-model="password"
                 :rules="[rules.required, rules.min]"
-                :type="show1 ? 'text' : 'password'"
-              ></v-text-field>
+                :type="show ? 'text' : 'password'"
+              >
+              </v-text-field>
               <v-text-field
-                id="passwordconfirm"
                 prepend-icon="mdi-lock"
                 name="passwordconfirm"
                 label="Neues Passwort Bestätigen"
                 v-model="passwordconfirm"
                 :rules="[rules.required, rules.min]"
-                :type="show1 ? 'text' : 'password'"
-              ></v-text-field>
+                :type="show ? 'text' : 'password'"
+              >
+              </v-text-field>
               <v-alert
                 transition="fab-transition"
-                v-model="check"
+                v-model="alert"
                 color="red"
                 class="mt-4"
                 dismissible
-                elevation="10"
+                elevation="2"
                 type="error"
-                >Fehler! Eingabe Überprüfen</v-alert
               >
+                Fehler! Eingabe Überprüfen
+              </v-alert>
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex align-center">
-            <v-btn class="ma-4" color="secondary" :to="'/' + 'login'"
-              >Zurück</v-btn
-            >
+            <v-btn class="ma-4" color="secondary" :to="'/' + 'login'">
+              Zurück
+            </v-btn>
             <v-spacer></v-spacer>
-            <v-btn class="ma-4" color="secondary" @click="resetPassword" x-large
-              >Passwort Zurücksetzen</v-btn
+            <v-btn
+              class="ma-4"
+              color="secondary"
+              @click="resetPassword"
+              x-large
             >
+              Passwort Zurücksetzen
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -67,13 +73,11 @@ import AuthService from "@/services/AuthService";
 
 export default {
   name: "LoginDialog",
+
   data() {
     return {
-      check: false,
-      show1: false,
-      show2: true,
-      show3: false,
-      show4: false,
+      alert: false,
+      show: false,
       email: "",
       password: "",
       passwordconfirm: "",
@@ -83,10 +87,9 @@ export default {
       },
     };
   },
+
   methods: {
     resetPassword() {
-      this.error = null;
-      this.message = null;
       const payload = {
         email: this.email,
         password: this.password,
@@ -95,7 +98,6 @@ export default {
       };
       AuthService.resetPassword(payload)
         .then(() => {
-          this.message = "Password reset.";
           this.$router.push("/login");
         })
         .catch(console.log("Fehler"));

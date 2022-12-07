@@ -5,7 +5,7 @@
       :search="search"
       :items="teilnehmer"
       hide-default-footer
-      class="elevation-10"
+      class="elevation-2"
       sort-by="name"
     >
       <template v-slot:top>
@@ -16,10 +16,11 @@
           <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
-            label="Search"
+            label="Suche"
             single-line
             hide-details
-          ></v-text-field>
+          >
+          </v-text-field>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="500px">
@@ -32,27 +33,22 @@
               <v-card-title>
                 <span class="text-h5">{{ formTitle }}</span>
               </v-card-title>
-
               <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.name"
-                        label="Name"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.abteilung"
-                        disabled
-                        label="Abteilung"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
+                <v-text-field
+                  class="ma-4"
+                  v-model="editedItem.name"
+                  label="Name"
+                >
+                </v-text-field>
+                <v-text-field
+                  class="ma-4"
+                  width="250"
+                  v-model="editedItem.abteilung"
+                  disabled
+                  label="Abteilung"
+                >
+                </v-text-field>
               </v-card-text>
-
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="secondary" text @click="close"> Schließen </v-btn>
@@ -109,11 +105,9 @@ import store from "@/store/index";
 
 export default {
   data: () => ({
-    check: false,
     dialog: false,
     dialogDelete: false,
     search: "",
-    formTitle: "Teilnehmer bearbeiten",
     headers: [
       { text: "Name", value: "name", sortable: false },
       { text: "Abteilung", value: "abteilung", sortable: false },
@@ -157,22 +151,33 @@ export default {
       });
   },
 
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1
+        ? "Teilnehmer hinzufügen"
+        : "Teilnehmer bearbeiten";
+    },
+  },
+
   methods: {
     close() {
       this.dialog = false;
       this.dialogDelete = false;
       this.editedItem = Object.assign({}, this.defaultItem);
     },
+
     editItem(item) {
       this.editedIndex = this.teilnehmer.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
+
     deleteItem(item) {
       this.editedIndex = this.teilnehmer.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
+
     save() {
       if (this.editedItem.id == "") {
         this.createTeilnehmer();
@@ -180,6 +185,7 @@ export default {
         this.updateTeilnehmer();
       }
     },
+
     deleteTeilnehmer() {
       API.apiClient
         .delete(`/deleteTeilnehmer=${this.editedItem.id}`)
@@ -194,6 +200,7 @@ export default {
           this.close();
         });
     },
+
     createTeilnehmer() {
       API.apiClient
         .post(`/storeTeilnehmer`, this.editedItem)
@@ -209,6 +216,7 @@ export default {
           this.close();
         });
     },
+
     updateTeilnehmer() {
       console.log(this.editedItem);
       API.apiClient

@@ -1,7 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import store from "@/store/index";
-/* import { component } from "vue/types/umd"; */
 import BestellungChildView from "../views/child_view/BestellungChildView.vue";
 import IndividuellUserVerwaltungChildView from "../views/child_view/IndividuellUserVerwaltungChildView.vue";
 import GesamtBestellungChildView from "../views/child_view/GesamtBestellungChildView.vue";
@@ -23,7 +22,6 @@ import Nutzer from "../middleware/nutzer";
 import Koch from "../middleware/koch";
 import Admin from "../middleware/admin";
 import Gast from "../middleware/gast";
-//import AuthService from "@/services/AuthService";
 
 Vue.use(VueRouter);
 

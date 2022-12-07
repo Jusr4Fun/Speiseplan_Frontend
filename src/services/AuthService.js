@@ -4,12 +4,9 @@ import router from "@/router";
 
 export const authClient = axios.create({
   baseURL: process.env.VUE_APP_API_URL,
-  withCredentials: true, // required to handle the CSRF token
+  withCredentials: true,
 });
 
-/*
- * Add a response interceptor
- */
 authClient.interceptors.response.use(
   (response) => {
     return response;
@@ -37,10 +34,10 @@ export default {
             var authUser = await store.dispatch("auth/getAuthUser");
             if (authUser) {
               success = true;
-              router.push("/dashboard");
+              router.push("/Dashboard");
             } else {
               const error = Error(
-                "Unable to fetch user after login, check your API settings."
+                "Nicht in der Lage die nötigen Daten abzurufen bitte Kontakttieren sie einen Administrator"
               );
               error.name = "Fetch User";
               throw error;

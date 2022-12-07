@@ -3,7 +3,7 @@
     <v-row class="justify-center mt-2">
       <v-card class="card text-h6" elevation="0" width="300">
         <v-row class="d-flex justify-center">
-          <v-card elevation="0">
+          <v-card elevation="0" class="card">
             <v-btn
               dark
               fab
@@ -13,7 +13,7 @@
               elevation="2"
               color="buttonGreen"
             >
-              <v-icon dark>mdi-chevron-left</v-icon>
+              <v-icon dark> mdi-chevron-left </v-icon>
             </v-btn>
             {{ ausgewaehlteWoche.name }}
             <v-btn
@@ -45,9 +45,7 @@
     </v-row>
     <v-layout child-flex>
       <v-data-table
-        class="ma-2 elevation-1"
-        :ripple="false"
-        no-gutters
+        class="ma-2 elevation-2"
         :items="normal"
         :headers="normalHeader"
         hide-default-footer
@@ -55,65 +53,39 @@
       >
         <template v-slot:top>
           <v-toolbar flat>
-            <v-toolbar-title
-              class="d-flex align-center text-h5 font-weight-bold ma-2"
-            >
+            <v-toolbar-title class="text-h5 font-weight-bold ma-2">
               Normale Bestellungen
             </v-toolbar-title>
           </v-toolbar>
         </template>
         <template v-slot:[`item.Montag`]="{ item }">
-          <v-text-field
-            class="justify-center"
-            min="0"
-            type="number"
-            v-model="item.Montag"
-          >
+          <v-text-field min="0" type="number" v-model="item.Montag">
           </v-text-field>
         </template>
-        <template v-slot:[`item.Dienstag`]="{ item }"
-          ><v-text-field
-            class="justify-center"
-            min="0"
-            type="number"
-            v-model="item.Dienstag"
-          ></v-text-field>
+        <template v-slot:[`item.Dienstag`]="{ item }">
+          <v-text-field min="0" type="number" v-model="item.Dienstag">
+          </v-text-field>
         </template>
-        <template v-slot:[`item.Mittwoch`]="{ item }"
-          ><v-text-field
-            class="justify-center"
-            min="0"
-            type="number"
-            v-model="item.Mittwoch"
-          ></v-text-field>
+        <template v-slot:[`item.Mittwoch`]="{ item }">
+          <v-text-field min="0" type="number" v-model="item.Mittwoch">
+          </v-text-field>
         </template>
-        <template v-slot:[`item.Donnerstag`]="{ item }"
-          ><v-text-field
-            class="justify-center"
-            min="0"
-            type="number"
-            v-model="item.Donnerstag"
-          ></v-text-field>
+        <template v-slot:[`item.Donnerstag`]="{ item }">
+          <v-text-field min="0" type="number" v-model="item.Donnerstag">
+          </v-text-field>
         </template>
-        <template v-slot:[`item.Freitag`]="{ item }"
-          ><v-text-field
-            class="justify-center"
-            min="0"
-            type="number"
-            v-model="item.Freitag"
-          ></v-text-field>
+        <template v-slot:[`item.Freitag`]="{ item }">
+          <v-text-field min="0" type="number" v-model="item.Freitag">
+          </v-text-field>
         </template>
       </v-data-table>
     </v-layout>
     <v-layout child-flex>
       <v-data-table
         ref="specialBestellungenTabelle"
-        :ripple="false"
-        no-gutters
         :headers="header"
         :items="spezialBestellung"
-        class="elevation-1 ma-2"
-        loading-text="Laden... Bitte Warten"
+        class="elevation-2 ma-2"
         no-data-text="noch keine Daten Eingetragen"
         hide-default-footer
         mobile-breakpoint="875"
@@ -121,9 +93,8 @@
       >
         <template v-slot:top>
           <v-toolbar flat>
-            <v-toolbar-title
-              class="d-flex align-center text-h5 font-weight-bold ma-2"
-              >Spezial Bestellungen
+            <v-toolbar-title class="text-h5 font-weight-bold ma-2">
+              Spezial Bestellungen
             </v-toolbar-title>
             <v-row class="d-flex justify-end pa-md-4">
               <v-card-title>
@@ -149,19 +120,19 @@
                   </template>
                   <template v-slot-model="dialog">
                     <v-card>
-                      <v-toolbar color="primary" dark
-                        >Neue Spezial Bestellung</v-toolbar
-                      >
+                      <v-toolbar color="primary" dark>
+                        Neue Spezial Bestellung
+                      </v-toolbar>
                       <v-card-text>
                         <v-autocomplete
                           label="Teilnehmer"
                           required
                           v-model="editedItem"
-                          :rules="inputRules"
                           :items="teilnehmer"
                           item-text="name"
                           return-object
-                        ></v-autocomplete>
+                        >
+                        </v-autocomplete>
                         <v-autocomplete
                           label="Montag"
                           required
@@ -325,6 +296,12 @@
   </v-container>
 </template>
 
+<style scoped>
+.card {
+  background-color: #b0bec5;
+}
+</style>
+
 <script>
 import store from "@/store/index";
 import * as API from "@/services/API";
@@ -337,7 +314,6 @@ export default {
       dialogDelete: false,
       updated: false,
       inBearbeitung: false,
-      loadingSpecial: true,
       wochenBestellungID: null,
       updateManual: false,
       timer: null,
@@ -360,7 +336,6 @@ export default {
         Donnerstag: " ",
         Freitag: " ",
       },
-      inputRules: [(v) => !!v || "Schreib was rein"],
       normalHeader: [
         { text: "Montag", value: "Montag" },
         { text: "Dienstag", value: "Dienstag" },
@@ -397,6 +372,7 @@ export default {
       user: {},
     };
   },
+
   async beforeMount() {
     this.updateManual = true;
     this.user = Object.assign({}, store.getters["auth/authUser"]);
@@ -423,6 +399,7 @@ export default {
       else if (Essen == "Glutenfrei") return "#FBC02D";
       else if (Essen == "") return "white";
     },
+
     speichern() {
       if (this.editedItem.Name != " ") {
         this.spezialBestellung.push(Object.assign({}, this.editedItem));
@@ -430,6 +407,7 @@ export default {
         this.inputDialog = false;
       }
     },
+
     close() {
       this.editedItem = this.defaultItem;
       this.inputDialog = false;
@@ -563,10 +541,12 @@ export default {
       next();
     },
   },
+
   beforeRouteLeave: function (to, from, next) {
-    console.log("Saving Changes before Leaving");
+    console.log("Speichern vor dem Verlassen der Seite");
     this.saveBeforeLeave(next);
   },
+
   watch: {
     spezialBestellung: {
       deep: true,

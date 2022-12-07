@@ -18,14 +18,14 @@
               >
               </v-text-field>
               <v-text-field
-                id="password"
                 prepend-icon="mdi-lock"
                 name="password"
                 label="Passwort"
                 v-model="password"
                 :rules="[rules.required, rules.min]"
-                :type="show1 ? 'text' : 'password'"
-              ></v-text-field>
+                :type="show ? 'text' : 'password'"
+              >
+              </v-text-field>
               <v-alert
                 transition="fab-transition"
                 v-model="check"
@@ -34,8 +34,9 @@
                 dismissible
                 elevation="10"
                 type="error"
-                >Fehler! Eingabe Überprüfen</v-alert
               >
+                Fehler! Eingabe Überprüfen
+              </v-alert>
             </v-form>
           </v-card-text>
           <v-card-actions class="d-flex align-center">
@@ -46,9 +47,9 @@
               >Passwort Zurücksetzen</v-btn
             >
             <v-spacer></v-spacer>
-            <v-btn class="ma-4" color="secondary" @click="login" x-large
-              >Login</v-btn
-            >
+            <v-btn class="ma-4" color="secondary" @click="login" x-large>
+              Login
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -58,15 +59,14 @@
 
 <script>
 import AuthService from "@/services/AuthService";
+
 export default {
   name: "LoginDialog",
+
   data() {
     return {
       check: false,
-      show1: false,
-      show2: true,
-      show3: false,
-      show4: false,
+      show: false,
       email: "",
       password: "",
       rules: {
@@ -75,6 +75,7 @@ export default {
       },
     };
   },
+
   methods: {
     async login() {
       const payload = {
@@ -83,10 +84,6 @@ export default {
       };
       this.error = null;
       await AuthService.login(payload);
-    },
-
-    support() {
-      this.$router.push({ path: "/PrintGesamtBestellungen" });
     },
   },
 };

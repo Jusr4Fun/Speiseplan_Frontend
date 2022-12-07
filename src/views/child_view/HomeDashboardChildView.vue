@@ -24,7 +24,8 @@
           class="fill-height cyan lighten-3 rounded-xl0"
           elevation="2"
           :to="'/' + 'Teilnehmer'"
-          ><v-card-text>
+        >
+          <v-card-text>
             <v-row class="d-flex justify-center text-center">
               <v-icon size="75" color="grey darken-3">mdi-account-group</v-icon>
             </v-row>
@@ -38,15 +39,16 @@
         <v-card
           class="fill-height amber lighten-3 text-center rounded-xl0"
           elevation="2"
-          ><v-card-text class="text-h2 text-center font-weight-bold">
+        >
+          <v-card-text class="text-h2 text-center font-weight-bold">
             {{ ausgewaehlteWoche.name }} <br />
             <div class="text-h6">
               {{ ausgewaehlteWoche.wochenanfang }}
               -
               {{ ausgewaehlteWoche.wochenende }}
-            </div></v-card-text
-          ></v-card
-        >
+            </div>
+          </v-card-text>
+        </v-card>
       </v-col>
       <v-col v-if="isNutzer">
         <v-card
@@ -176,8 +178,10 @@ import Koch from "@/middleware/koch";
 import store from "@/store/index";
 import * as API from "@/services/API";
 import { Buffer } from "buffer";
+
 export default {
   name: "Dashboard-View",
+
   data() {
     return {
       isKoch: false,
@@ -205,20 +209,19 @@ export default {
     this.calcimgHeight();
   },
 
-  /* beforeUpdate() {
-    this.calcimgHeight();
-  }, */
-
   methods: {
     istKoch() {
       return roleCheck(store, [Koch]);
     },
+
     istNutzer() {
       return roleCheck(store, [Nutzer]);
     },
+
     calcimgHeight() {
       this.imgheight = this.$refs.card.$el.clientHeight - 32;
     },
+
     naechsteWoche() {
       API.apiClient
         .get(`/woche=${this.ausgewaehlteWoche.id + 1}`)
@@ -226,23 +229,23 @@ export default {
           this.ausgewaehlteWoche = response.data.data;
           console.log(response.status);
           console.log(response.data.message);
-          console.log(response.data.data);
           this.updated = true;
         });
     },
+
     loadImage() {
       API.apiClient
         .get(`/ImageWoche/${this.ausgewaehlteWoche.id}`, {
           responseType: "arraybuffer",
         })
         .then((response) => {
-          console.log(response);
           this.image =
             "data:image/jpeg;base64," +
             Buffer.from(response.data, "binary").toString("base64");
           console.log(response.status);
         });
     },
+
     vorherigeWoche() {
       API.apiClient
         .get(`/woche=${this.ausgewaehlteWoche.id - 1}`)
@@ -250,11 +253,11 @@ export default {
           this.ausgewaehlteWoche = response.data.data;
           console.log(response.status);
           console.log(response.data.message);
-          console.log(response.data.data);
           this.updated = true;
         });
     },
   },
+
   watch: {
     ausgewaehlteWoche: {
       deep: true,

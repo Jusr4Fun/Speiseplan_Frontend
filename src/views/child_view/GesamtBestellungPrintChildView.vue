@@ -8,7 +8,6 @@
     </v-row>
     <v-card class="elevation-0">
       <v-data-table
-        no-gutters
         dense
         :items="bestellungGesamt"
         :headers="gesamtHeader"
@@ -23,7 +22,6 @@
     <v-row></v-row>
     <v-layout child-flex>
       <v-data-table
-        no-gutters
         dense
         :headers="spezialheader"
         :items="spezialBestellungen"
@@ -43,7 +41,6 @@ export default {
 
   data() {
     return {
-      ausgewaehlteWoche: {},
       spezialBestellungen: [],
       bestellungGesamt: [],
       spezialheader: [
@@ -124,7 +121,6 @@ export default {
   },
 
   async mounted() {
-    console.log(this.$route);
     this.print();
   },
 

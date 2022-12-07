@@ -6,7 +6,8 @@
         elevation="0"
         height="100"
         width="400"
-        ><v-card-text class="text-center text-h4 black--text">
+      >
+        <v-card-text class="text-center text-h4 black--text">
           {{ ausgewaehlteWoche.wochenanfang }}
           -
           {{ ausgewaehlteWoche.wochenende }}
@@ -83,15 +84,13 @@
 .card {
   background-color: #b0bec5;
 }
-
-.container {
-  background-color: #b0bec5;
-}
 </style>
+
 <script>
 import store from "@/store/index";
 import * as API from "@/services/API";
 import { Buffer } from "buffer";
+
 export default {
   data: () => ({
     ausgewaehlteWoche: null,
@@ -144,7 +143,6 @@ export default {
           responseType: "arraybuffer",
         })
         .then((response) => {
-          console.log(response);
           this.previewImage =
             "data:image/jpeg;base64," +
             Buffer.from(response.data, "binary").toString("base64");
@@ -170,7 +168,6 @@ export default {
           reader.readAsDataURL(this.PayloadImage);
           reader.onload = (e) => {
             this.previewImage = e.target.result;
-            console.log(this.previewImage);
           };
         }
       });

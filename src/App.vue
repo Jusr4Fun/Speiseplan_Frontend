@@ -6,17 +6,22 @@
 export default {};
 </script>
 
-<style scoped>
-@media print {
-  .v-content {
-    padding: 0 !important;
-  }
-  .v-main {
-    padding: 0 !important;
-  }
+<style>
+.container {
+  background-color: #b0bec5;
+}
+.card {
+  background-color: #b0bec5;
+}
+.container.fill-height {
+  flex-direction: column !important;
+  align-items: unset !important;
 }
 
-html {
-  overflow: hidden;
+.theme--dark.v-application {
+  background-color: var(--v-background-base, #121212) !important;
+}
+.theme--light.v-application {
+  background-color: var(--v-background-base, white) !important;
 }
 </style>

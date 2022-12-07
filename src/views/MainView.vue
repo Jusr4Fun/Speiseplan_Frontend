@@ -6,7 +6,6 @@
       app
       permanent
       color="secondary"
-      class="d-print-none"
     >
       <v-list-item class="px-2">
         <v-list-item-avatar color="white">
@@ -14,9 +13,7 @@
         </v-list-item-avatar>
         <v-list-item-title>Speiseplan</v-list-item-title>
       </v-list-item>
-
       <v-divider></v-divider>
-
       <v-list dense nav>
         <v-list-item-group active-class="bg-active">
           <v-list-item
@@ -28,7 +25,6 @@
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>
-
             <v-list-item-content>
               <v-list-item-title>{{ item.name }}</v-list-item-title>
             </v-list-item-content>
@@ -37,13 +33,13 @@
       </v-list>
     </v-navigation-drawer>
     <v-app-bar app fixed color="primary" elevate-on-scroll class="d-print-none">
-      <v-toolbar-title class="pa-md-4 white--text">{{
-        $route.meta.title || "Default title"
-      }}</v-toolbar-title>
+      <v-toolbar-title class="pa-md-4 white--text">
+        {{ $route.meta.title || "Default title" }}
+      </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn v-if="show == false" :to="'/' + 'login'" color="secondary"
-        >Anmelden</v-btn
-      >
+      <v-btn v-if="show == false" :to="'/' + 'login'" color="secondary">
+        Anmelden
+      </v-btn>
       <v-menu
         bottom
         min-width="200px"
@@ -62,8 +58,8 @@
             @click="usercard = !usercard"
             class="ma-2"
           >
-            <v-avatar color="secondary" size="44">
-              <span class="text-h5">{{ user.initials }}</span>
+            <v-avatar color="secondary text-h5 text-center" size="44">
+              {{ user.initials }}
             </v-avatar>
           </v-btn>
         </template>
@@ -71,10 +67,9 @@
           <v-card v-model="usercard">
             <v-list-item-content class="justify-center">
               <div class="mx-auto text-center">
-                <v-avatar color="secondary pa-md-6">
-                  <span class="text-h5">{{ user.initials }}</span>
+                <v-avatar color="secondary pa-md-6 text-h5 text-center">
+                  {{ user.initials }}
                 </v-avatar>
-                <br />
                 <h3 class="pa-md-2">{{ user.name }}</h3>
                 <p class="text-caption mt-1">
                   {{ user.email }}
@@ -100,10 +95,32 @@
 <script>
 import Admin from "../middleware/admin";
 import store from "@/store/index";
-//import * as API from "@/services/API";
 
 export default {
   name: "MainApp",
+
+  data: () => ({
+    loaded: false,
+    show: true,
+    usercard: null,
+    expand: false,
+    user: {
+      email: "",
+      emailVerified: "",
+      id: 0,
+      name: "",
+      initials: "",
+    },
+    defaultUser: {
+      email: "",
+      emailVerified: "",
+      id: 0,
+      name: "",
+      initials: "",
+    },
+    items: [],
+  }),
+
   async beforeMount() {
     if (store.getters["auth/loggedIn"]) {
       this.loaded = await this.getWochen();
@@ -152,47 +169,15 @@ export default {
       }
     });
   },
+
   async beforeUpdate() {
     if (store.getters["auth/authUser"]) {
       this.loadUser();
     } else {
       this.user = this.defaultUser;
-      /* try {
-        await store.dispatch["auth/getAuthUser"];
-        this.loadUser();
-      } catch {
-        this.user = this.defaultUser;
-        console.log("hier");
-      } */
     }
   },
 
-  data: () => ({
-    loaded: false,
-    userLoaded: false,
-    show: true,
-    usercard: null,
-    expand: false,
-    temp: {
-      time: new Date().getTime(),
-      offset: new Date().getTimezoneOffset(),
-    },
-    user: {
-      email: "",
-      emailVerified: "",
-      id: 0,
-      name: "",
-      initials: "",
-    },
-    defaultUser: {
-      email: "",
-      emailVerified: "",
-      id: 0,
-      name: "",
-      initials: "",
-    },
-    items: [],
-  }),
   methods: {
     logout() {
       store.dispatch("auth/logout").then(() => {});

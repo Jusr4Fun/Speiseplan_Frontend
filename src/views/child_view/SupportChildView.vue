@@ -1,37 +1,28 @@
 <template>
   <v-container fluid>
-    <v-btn color="primary" @click="zurueck"> Zurück </v-btn>
+    <v-btn color="primary mb-4" @click="zurueck"> Zurück </v-btn>
     <v-card elevation="0" class="justify-center">
       <v-card-title class="justify-center text-h5 font-weight-bold">
         Support Formular
       </v-card-title>
       <v-card-text>
-        <v-container>
-          <v-row>
-            <v-col cols="12">
-              <v-text-field
-                label="Email"
-                :rules="inputRules"
-                v-model="email"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-text-field
-                label="Betreff"
-                :rules="inputRules"
-                v-model="betreff"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-textarea
-                label="Details"
-                outlined
-                :rules="inputRules"
-                v-model="nachricht"
-              ></v-textarea>
-            </v-col>
-          </v-row>
-        </v-container>
+        <v-row class="mx-2">
+          <v-text-field label="Email" :rules="inputRules" v-model="email">
+          </v-text-field>
+        </v-row>
+        <v-row class="mx-2">
+          <v-text-field label="Betreff" :rules="inputRules" v-model="betreff">
+          </v-text-field>
+        </v-row>
+        <v-row class="mx-2">
+          <v-textarea
+            label="Details"
+            outlined
+            :rules="inputRules"
+            v-model="nachricht"
+          >
+          </v-textarea>
+        </v-row>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -61,7 +52,6 @@ export default {
 
   mounted() {
     this.user = Object.assign({}, this.$store.getters["auth/authUser"]);
-    console.log(this.user);
     this.email = this.user.email;
   },
 
@@ -73,10 +63,9 @@ export default {
       temp.betreff = this.betreff;
       temp.email = this.email;
       temp.user = this.user;
-      API.apiClient.post(`/SupportMail`, temp, { withCredentials: true });
-      console.log(this.email);
-      console.log(this.betreff);
-      console.log(this.nachricht);
+      API.apiClient
+        .post(`/SupportMail`, temp, { withCredentials: true })
+        .then(console.log("Support-Nachricht versendet"));
     },
 
     zurueck() {

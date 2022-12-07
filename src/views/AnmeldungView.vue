@@ -3,8 +3,8 @@
     <v-main>
       <router-view />
     </v-main>
-    <v-footer :padless="padless">
-      <v-card flat tile width="100%" class="primary lighten-1 text-center">
+    <v-footer padless="padless">
+      <v-card flat tile width="100%" class="primary text-center">
         <v-card-text>
           <v-tooltip bottom color="secondary">
             <template v-slot:activator="{ on }">
@@ -23,9 +23,7 @@
             <span>Support</span>
           </v-tooltip>
         </v-card-text>
-
         <v-divider></v-divider>
-
         <v-card-text class="white--text">
           {{ new Date().getFullYear() }} — <strong>CJD</strong>
         </v-card-text>
@@ -37,11 +35,5 @@
 <script>
 export default {
   name: "AnmeldungView",
-  data() {
-    return {
-      padless: true,
-      variant: "default",
-    };
-  },
 };
 </script>

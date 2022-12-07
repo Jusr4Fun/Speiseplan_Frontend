@@ -1,73 +1,70 @@
 <template>
-  <v-container>
+  <v-container fill-heigth fluid>
     <v-row class="justify-center">
       <v-alert
         transition="fab-transition"
         v-model="succesalert"
         color="success"
         dismissible
-        elevation="24"
+        elevation="2"
         type="success"
-        >Änderung Gespeichert</v-alert
       >
+        Änderung Gespeichert
+      </v-alert>
       <v-alert
         transition="fab-transition"
         v-model="erroralert"
         color="red"
         dismissible
-        elevation="24"
+        elevation="2"
         type="error"
-        >Fehler! Eingabe Überprüfen</v-alert
       >
+        Fehler! Eingabe Überprüfen
+      </v-alert>
     </v-row>
     <v-row class="text-h5 justify-center">
-      <v-card width="600" class="ma-4" elevation="10">
+      <v-card width="600" class="ma-4" elevation="2">
         <v-card-title class="text-h5 justify-center">
           {{ user.name }}
         </v-card-title>
-
         <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="editedItem.name"
-                  label="Name"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  disabled
-                  v-model="editedItem.abteilung"
-                  label="Abteilung"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  :type="'password'"
-                  v-model="password"
-                  label="Passwort"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="editedItem.email"
-                  label="E-Mail"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-          </v-container>
+          <v-row class="mx-2">
+            <v-col cols="12">
+              <v-text-field v-model="editedItem.name" label="Name">
+              </v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mx-2">
+            <v-col cols="12">
+              <v-text-field
+                disabled
+                v-model="editedItem.abteilung"
+                label="Abteilung"
+              >
+              </v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mx-2">
+            <v-col cols="12">
+              <v-text-field
+                :type="'password'"
+                v-model="password"
+                label="Passwort"
+              >
+              </v-text-field>
+            </v-col>
+          </v-row>
+          <v-row class="mx-2">
+            <v-col cols="12">
+              <v-text-field v-model="editedItem.email" label="E-Mail">
+              </v-text-field>
+            </v-col>
+          </v-row>
         </v-card-text>
       </v-card>
     </v-row>
-    <v-row class="d-flex justify-center pa-md-6"
-      ><v-btn
+    <v-row class="d-flex justify-center pa-md-6">
+      <v-btn
         class="mx-4 pa-md-2"
         dark
         color="buttonGreen"
@@ -83,11 +80,11 @@
 <script>
 import * as API from "@/services/API";
 import store from "@/store/index";
+
 export default {
   data: () => ({
     succesalert: false,
     erroralert: false,
-    check: false,
     user: {},
     password: null,
     editedItem: {
@@ -116,7 +113,6 @@ export default {
     },
 
     updateUser() {
-      console.log(Date.now());
       API.apiClient
         .post(`/updateUser`, this.editedItem)
         .then((response) => {
@@ -137,11 +133,6 @@ export default {
         this.erroralert = true;
       }
     },
-
-    /* alertsClose() {
-      this.succesalert = false;
-      this.erroralert = false;
-    }, */
   },
 };
 </script>

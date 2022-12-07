@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-row class="justify-center mt-6">
+    <v-row class="justify-center mt-2">
       <v-card class="card text-h6" elevation="0" width="300">
         <v-row class="d-flex justify-center">
           <v-card elevation="0">

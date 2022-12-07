@@ -1,6 +1,6 @@
 <template>
   <v-container fluid id="print">
-    <v-row class="d-flex align-start justify-space-around" dense>
+    <v-row class="d-flex align-start justify-space-around mt-2" dense>
       <v-card
         class="card text-center text-h6"
         elevation="0"

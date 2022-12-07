@@ -284,7 +284,7 @@ export default {
         }
       }
       API.apiClient
-        .post(`/storeUsers`, this.editedItem)
+        .post(`/storeUser`, this.editedItem)
         .then((response) => {
           console.log(response.status);
           console.log(response.data.message);
@@ -300,7 +300,7 @@ export default {
 
     deleteUser(id) {
       API.apiClient
-        .delete(`/deleteUser=${id}`)
+        .delete(`/deleteUser/${id}`)
         .then((response) => {
           console.log(response.status);
           console.log(response.data.message);

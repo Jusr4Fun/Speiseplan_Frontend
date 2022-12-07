@@ -448,7 +448,7 @@ export default {
       this.timerinterval();
       this.updated = true;
       API.apiClient
-        .get(`/woche=${this.ausgewaehlteWoche.id + 1}`)
+        .get(`/woche/${this.ausgewaehlteWoche.id + 1}`)
         .then((response) => {
           this.ausgewaehlteWoche = response.data.data;
           console.log(response.status);
@@ -460,7 +460,7 @@ export default {
       this.timerinterval();
       this.updated = true;
       API.apiClient
-        .get(`/woche=${this.ausgewaehlteWoche.id - 1}`)
+        .get(`/woche/${this.ausgewaehlteWoche.id - 1}`)
         .then((response) => {
           this.ausgewaehlteWoche = response.data.data;
           console.log(response.status);

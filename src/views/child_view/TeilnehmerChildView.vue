@@ -143,7 +143,7 @@ export default {
 
   beforeMount() {
     API.apiClient
-      .get(`/abteilungTeilnehmer=${this.user.abteilung_id}`)
+      .get(`/abteilungTeilnehmer/${this.user.abteilung_id}`)
       .then((response) => {
         this.teilnehmer = response.data.data;
         console.log(response.status);
@@ -188,7 +188,7 @@ export default {
 
     deleteTeilnehmer() {
       API.apiClient
-        .delete(`/deleteTeilnehmer=${this.editedItem.id}`)
+        .delete(`/deleteTeilnehmer/${this.editedItem.id}`)
         .then((response) => {
           console.log(response.status);
           console.log(response.data.message);

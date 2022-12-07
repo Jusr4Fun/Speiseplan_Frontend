@@ -41,16 +41,6 @@ const MainPages = {
         title: "Dashboard",
         requiresAuth: true,
         middleware: [Nutzer, Gast, Koch],
-        metaTags: [
-          {
-            name: "description",
-            content: "Hauptseite",
-          },
-          {
-            property: "og:description",
-            content: "Hauptseite",
-          },
-        ],
       },
     },
     {
@@ -62,16 +52,6 @@ const MainPages = {
         title: "Bestellungen",
         requiresAuth: true,
         middleware: [Nutzer],
-        metaTags: [
-          {
-            name: "description",
-            content: "Haupt Bestellseite",
-          },
-          {
-            property: "og:description",
-            content: "Haupt Bestellseite",
-          },
-        ],
       },
     },
     {
@@ -83,16 +63,6 @@ const MainPages = {
         title: "Gesamt Bestellungen",
         requiresAuth: true,
         middleware: [Koch],
-        metaTags: [
-          {
-            name: "description",
-            content: "Gesamt Bestellungen",
-          },
-          {
-            property: "og:description",
-            content: "Gesamt Bestellungen",
-          },
-        ],
       },
     },
     {
@@ -101,19 +71,9 @@ const MainPages = {
       component: TeilnehmerChildView,
       meta: {
         icon: "mdi-account-group",
-        title: "Nutzer",
+        title: "Teilnehmer Verwaltung",
         requiresAuth: true,
         middleware: [Nutzer],
-        metaTags: [
-          {
-            name: "description",
-            content: "Kontaktseite",
-          },
-          {
-            property: "og:description",
-            content: "Kontaktseite",
-          },
-        ],
       },
     },
     {
@@ -125,16 +85,6 @@ const MainPages = {
         title: "Gesamt Nutzer Verwaltung",
         requiresAuth: true,
         middleware: [Admin],
-        metaTags: [
-          {
-            name: "description",
-            content: "Kontaktseite",
-          },
-          {
-            property: "og:description",
-            content: "Kontaktseite",
-          },
-        ],
       },
     },
     {
@@ -146,16 +96,6 @@ const MainPages = {
         title: "Benutzerverwaltung",
         requiresAuth: true,
         middleware: [Nutzer],
-        metaTags: [
-          {
-            name: "description",
-            content: "Kontaktseite",
-          },
-          {
-            property: "og:description",
-            content: "Kontaktseite",
-          },
-        ],
       },
     },
     {
@@ -167,16 +107,6 @@ const MainPages = {
         title: "Upload",
         requiresAuth: true,
         middleware: [Koch],
-        metaTags: [
-          {
-            name: "description",
-            content: "Kontaktseite",
-          },
-          {
-            property: "og:description",
-            content: "Kontaktseite",
-          },
-        ],
       },
     },
     {
@@ -188,16 +118,6 @@ const MainPages = {
         title: "Support",
         requiresAuth: true,
         middleware: [Nutzer, Gast, Koch],
-        metaTags: [
-          {
-            name: "description",
-            content: "Kontaktseite",
-          },
-          {
-            property: "og:description",
-            content: "Kontaktseite",
-          },
-        ],
       },
     },
     {
@@ -209,16 +129,6 @@ const MainPages = {
         title: "Über",
         requiresAuth: true,
         middleware: [Nutzer, Gast, Koch],
-        metaTags: [
-          {
-            name: "description",
-            content: "Kontaktseite",
-          },
-          {
-            property: "og:description",
-            content: "Kontaktseite",
-          },
-        ],
       },
     },
   ],
@@ -238,16 +148,6 @@ const PrintPages = {
         title: "Gesamt Bestellungen Drucken",
         requiresAuth: true,
         middleware: [Koch],
-        metaTags: [
-          {
-            name: "description",
-            content: "Gesamt Bestellungen",
-          },
-          {
-            property: "og:description",
-            content: "Gesamt Bestellungen",
-          },
-        ],
       },
     },
   ],
@@ -265,16 +165,6 @@ const AuthPages = {
       meta: {
         title: "Login",
         requiresAuth: false,
-        metaTags: [
-          {
-            name: "description",
-            content: "Main Login Page",
-          },
-          {
-            property: "og:description",
-            content: "Main Login Page",
-          },
-        ],
       },
     },
     {
@@ -284,16 +174,6 @@ const AuthPages = {
       meta: {
         title: "Passwort Vergessen",
         requiresAuth: false,
-        metaTags: [
-          {
-            name: "description",
-            content: "Passwort Vergessen Page",
-          },
-          {
-            property: "og:description",
-            content: "Passwort Vergessen Page",
-          },
-        ],
       },
     },
     {
@@ -303,16 +183,6 @@ const AuthPages = {
       meta: {
         title: "Passwort zurücksetzen",
         requiresAuth: false,
-        metaTags: [
-          {
-            name: "description",
-            content: "Password Reset Page",
-          },
-          {
-            property: "og:description",
-            content: "Password Reset Page",
-          },
-        ],
       },
     },
     {
@@ -323,16 +193,6 @@ const AuthPages = {
         icon: "mdi-face-agent",
         title: "Support",
         requiresAuth: false,
-        metaTags: [
-          {
-            name: "description",
-            content: "Kontaktseite",
-          },
-          {
-            property: "og:description",
-            content: "Kontaktseite",
-          },
-        ],
       },
     },
     {
@@ -343,16 +203,6 @@ const AuthPages = {
         icon: "mdi-information",
         title: "Über",
         requiresAuth: false,
-        metaTags: [
-          {
-            name: "description",
-            content: "Kontaktseite",
-          },
-          {
-            property: "og:description",
-            content: "Kontaktseite",
-          },
-        ],
       },
     },
   ],
@@ -365,16 +215,6 @@ const routes = [
     component: MainView,
     meta: {
       title: "Error 404 Page not found",
-      metaTags: [
-        {
-          name: "description",
-          content: "Main Login Page",
-        },
-        {
-          property: "og:description",
-          content: "Main Login Page",
-        },
-      ],
     },
   },
   AuthPages,
@@ -389,6 +229,9 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+  if (to.path == "/") {
+    next({ path: "/Dashboard", query: { redirect: to.fullPath } });
+  }
   const middleware = to.meta.middleware;
   const context = { to, from, next, store };
   const authUser = store.getters["auth/authUser"];

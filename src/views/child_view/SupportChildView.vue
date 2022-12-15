@@ -1,6 +1,28 @@
 <template>
   <v-container fluid>
     <v-btn color="primary mb-4" @click="zurueck"> Zurück </v-btn>
+    <v-row class="justify-center">
+      <v-alert
+        transition="fab-transition"
+        v-model="succesalert"
+        color="success"
+        dismissible
+        elevation="2"
+        type="success"
+      >
+        Support Anfrage erfolgreich versendet
+      </v-alert>
+      <v-alert
+        transition="fab-transition"
+        v-model="erroralert"
+        color="red"
+        dismissible
+        elevation="2"
+        type="error"
+      >
+        Fehler! Eingabe Überprüfen
+      </v-alert>
+    </v-row>
     <v-card elevation="0" class="justify-center">
       <v-card-title class="justify-center text-h5 font-weight-bold">
         Support Formular
@@ -42,6 +64,8 @@ export default {
 
   data() {
     return {
+      succesalert: false,
+      erroralert: false,
       email: "",
       betreff: "",
       nachricht: "",
@@ -65,11 +89,22 @@ export default {
       temp.user = this.user;
       API.apiClient
         .post(`/SupportMail`, temp, { withCredentials: true })
-        .then(console.log("Support-Nachricht versendet"));
+        .then(() => {
+          console.log("Support-Nachricht versendet");
+          this.checkStatus(true);
+        });
     },
 
     zurueck() {
       this.$router.back();
+    },
+
+    checkStatus(teststatus) {
+      if (teststatus) {
+        this.succesalert = true;
+      } else {
+        this.erroralert = true;
+      }
     },
   },
 };

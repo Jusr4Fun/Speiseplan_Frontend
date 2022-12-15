@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-btn color="primary mb-4" @click="zurueck"> Zurück </v-btn>
-    <v-row class="justify-center">
+    <v-row class="justify-center pa-2">
       <v-alert
         transition="fab-transition"
         v-model="succesalert"

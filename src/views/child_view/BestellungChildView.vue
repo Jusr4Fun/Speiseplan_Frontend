@@ -432,6 +432,9 @@ export default {
             this.wochenBestellungID = response.data.data.id;
             this.spezialBestellung = response.data.data.spezial_essen;
           }
+        })
+        .then((error) => {
+          console.log(error);
         });
       API.apiClient
         .get(
@@ -544,7 +547,13 @@ export default {
 
   beforeRouteLeave: function (to, from, next) {
     console.log("Speichern vor dem Verlassen der Seite");
-    this.saveBeforeLeave(next);
+    if (to.path == "/login") {
+      if (this.$router.currentRoute != "/login") {
+        next();
+      }
+    } else {
+      this.saveBeforeLeave(next);
+    }
   },
 
   watch: {

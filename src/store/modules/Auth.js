@@ -29,7 +29,9 @@ export const actions = {
     return AuthService.logout()
       .then(() => {
         commit("SET_USER", null);
-        router.push({ path: "/login" });
+        if (router.currentRoute != "/login") {
+          router.push({ path: "/login" });
+        }
       })
       .catch((error) => {
         commit("SET_ERROR", console.log(error.data));

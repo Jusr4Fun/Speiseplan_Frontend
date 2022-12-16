@@ -12,11 +12,15 @@ authClient.interceptors.response.use(
     return response;
   },
   function (error) {
+    console.log(error);
     if (
       error.response &&
       (error.response.status === 401 || error.response.status === 419)
     ) {
       store.dispatch("auth/logout");
+      if (router.currentRoute != "/login") {
+        router.push("/login");
+      }
     }
     return Promise.reject(error);
   }

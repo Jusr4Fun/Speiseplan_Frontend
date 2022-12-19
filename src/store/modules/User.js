@@ -39,7 +39,7 @@ export const actions = {
       })
       .catch((error) => {
         commit("SET_LOADING", false);
-        commit("SET_ERROR", console.log(error.data));
+        commit("SET_ERROR", error.data); //console.log(error.data));
       });
   },
   getUsers({ commit }) {
@@ -51,7 +51,7 @@ export const actions = {
       })
       .catch((error) => {
         commit("SET_LOADING", false);
-        commit("SET_ERROR", console.log(error.data));
+        commit("SET_ERROR", error.data); //console.log(error.data));
       });
   },
 };

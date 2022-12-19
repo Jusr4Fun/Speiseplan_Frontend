@@ -12,17 +12,16 @@ authClient.interceptors.response.use(
     return response;
   },
   function (error) {
-    console.log(error);
     if (
       error.response &&
       (error.response.status === 401 || error.response.status === 419)
     ) {
       store.dispatch("auth/logout");
       if (router.currentRoute != "/login") {
-        router.push("/login");
+        router.push("/login").catch(() => {});
       }
     }
-    return Promise.reject(error);
+    //return Promise.reject(error);
   }
 );
 
@@ -47,14 +46,15 @@ export default {
               throw error;
             }
           } catch (error) {
-            console.log(error);
+            () => {};
           }
         }
       })
-      .catch(() => console.log("Sessionüberprüfung fehlgeschlagen"));
+      .catch(() => {}); //console.log("Sessionüberprüfung fehlgeschlagen"));
     return success;
   },
   async logout() {
+    await authClient.get("/sanctum/csrf-cookie");
     await authClient.post("/logout");
   },
   async forgotPassword(payload) {

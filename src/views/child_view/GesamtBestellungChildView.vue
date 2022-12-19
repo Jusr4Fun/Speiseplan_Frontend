@@ -242,10 +242,11 @@ export default {
         .get(`/woche/${this.ausgewaehlteWoche.id + 1}`)
         .then((response) => {
           this.ausgewaehlteWoche = response.data.data;
-          console.log(response.status);
-          console.log(response.data.message);
+          //console.log(response.status);
+          //console.log(response.data.message);
           this.updated = true;
-        });
+        })
+        .catch(() => {});
     },
 
     vorherigeWoche() {
@@ -253,10 +254,11 @@ export default {
         .get(`/woche/${this.ausgewaehlteWoche.id - 1}`)
         .then((response) => {
           this.ausgewaehlteWoche = response.data.data;
-          console.log(response.status);
-          console.log(response.data.message);
+          //console.log(response.status);
+          //console.log(response.data.message);
           this.updated = true;
-        });
+        })
+        .catch(() => {});
     },
 
     print() {

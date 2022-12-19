@@ -146,9 +146,10 @@ export default {
       .get(`/abteilungTeilnehmer/${this.user.abteilung_id}`)
       .then((response) => {
         this.teilnehmer = response.data.data;
-        console.log(response.status);
-        console.log(response.data.message);
-      });
+        //console.log(response.status);
+        //console.log(response.data.message);
+      })
+      .catch(() => {});
   },
 
   computed: {
@@ -189,14 +190,13 @@ export default {
     deleteTeilnehmer() {
       API.apiClient
         .delete(`/deleteTeilnehmer/${this.editedItem.id}`)
-        .then((response) => {
-          console.log(response.status);
-          console.log(response.data.message);
+        .then(() => {
+          //console.log(response.status);
+          //console.log(response.data.message);
           this.teilnehmer.splice(this.editedIndex, 1);
           this.close();
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
           this.close();
         });
     },
@@ -205,30 +205,28 @@ export default {
       API.apiClient
         .post(`/storeTeilnehmer`, this.editedItem)
         .then((response) => {
-          console.log(response.status);
-          console.log(response.data.message);
+          //console.log(response.status);
+          //console.log(response.data.message);
           this.editedItem.id = response.data.data.id;
           this.teilnehmer.push(this.editedItem);
           this.close();
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
           this.close();
         });
     },
 
     updateTeilnehmer() {
-      console.log(this.editedItem);
+      //console.log(this.editedItem);
       API.apiClient
         .post(`/updateTeilnehmer`, this.editedItem)
-        .then((response) => {
-          console.log(response.status);
-          console.log(response.data.message);
+        .then(() => {
+          //console.log(response.status);
+          //console.log(response.data.message);
           Object.assign(this.teilnehmer[this.editedIndex], this.editedItem);
           this.close();
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
           this.close();
         });
     },

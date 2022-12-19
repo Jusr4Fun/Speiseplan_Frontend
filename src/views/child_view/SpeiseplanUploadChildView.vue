@@ -116,8 +116,8 @@ export default {
         .get(`/woche/${this.ausgewaehlteWoche.id + 1}`)
         .then((response) => {
           this.ausgewaehlteWoche = response.data.data;
-          console.log(response.status);
-          console.log(response.data.message);
+          //console.log(response.status);
+          //console.log(response.data.message);
         });
     },
 
@@ -126,13 +126,13 @@ export default {
         .get(`/woche/${this.ausgewaehlteWoche.id - 1}`)
         .then((response) => {
           this.ausgewaehlteWoche = response.data.data;
-          console.log(response.status);
-          console.log(response.data.message);
+          //console.log(response.status);
+          //console.log(response.data.message);
         });
     },
 
     uploadImage(e) {
-      console.log(e);
+      //console.log(e);
       this.PayloadImage = e.target.files[0];
       this.sendImage();
     },
@@ -143,10 +143,11 @@ export default {
           responseType: "arraybuffer",
         })
         .then((response) => {
-          this.previewImage =
-            "data:image/jpeg;base64," +
-            Buffer.from(response.data, "binary").toString("base64");
-          console.log(response.status);
+          if (response) {
+            this.previewImage =
+              "data:image/jpeg;base64," +
+              Buffer.from(response.data, "binary").toString("base64");
+          }
         });
     },
 
@@ -161,8 +162,8 @@ export default {
       data.append("woche", wochenPayload);
       data.append("image", this.PayloadImage);
       API.apiClient.post(`/uploadImage`, data, config).then((response) => {
-        console.log(response.status);
-        console.log(response.data.message);
+        //console.log(response.status);
+        //console.log(response.data.message);
         if (response.status == 200) {
           const reader = new FileReader();
           reader.readAsDataURL(this.PayloadImage);

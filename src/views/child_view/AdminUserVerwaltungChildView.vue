@@ -252,21 +252,30 @@ export default {
   },
 
   mounted() {
-    API.apiClient.get(`/users`).then((response) => {
-      this.users = response.data.data;
-      console.log(response.status);
-      console.log(response.data.message);
-    });
-    API.apiClient.get(`/abteilungen`).then((response) => {
-      this.abteilungen = response.data.data;
-      console.log(response.status);
-      console.log(response.data.message);
-    });
-    API.apiClient.get(`/RolleRoleID`).then((response) => {
-      this.rollen = response.data.data;
-      console.log(response.status);
-      console.log(response.data.message);
-    });
+    API.apiClient
+      .get(`/users`)
+      .then((response) => {
+        this.users = response.data.data;
+        //console.log(response.status);
+        //console.log(response.data.message);
+      })
+      .catch(() => {});
+    API.apiClient
+      .get(`/abteilungen`)
+      .then((response) => {
+        this.abteilungen = response.data.data;
+        //console.log(response.status);
+        //console.log(response.data.message);
+      })
+      .catch(() => {});
+    API.apiClient
+      .get(`/RolleRoleID`)
+      .then((response) => {
+        this.rollen = response.data.data;
+        //console.log(response.status);
+        //console.log(response.data.message);
+      })
+      .catch(() => {});
   },
 
   methods: {
@@ -286,14 +295,13 @@ export default {
       API.apiClient
         .post(`/storeUser`, this.editedItem)
         .then((response) => {
-          console.log(response.status);
-          console.log(response.data.message);
+          //console.log(response.status);
+          //console.log(response.data.message);
           this.editedItem.id = response.data.data.id;
           this.users.push(this.editedItem);
           this.close();
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
           this.close();
         });
     },
@@ -301,14 +309,13 @@ export default {
     deleteUser(id) {
       API.apiClient
         .delete(`/deleteUser/${id}`)
-        .then((response) => {
-          console.log(response.status);
-          console.log(response.data.message);
+        .then(() => {
+          //console.log(response.status);
+          //console.log(response.data.message);
           this.users.splice(this.editedIndex, 1);
           this.closeDelete();
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
           this.closeDelete();
         });
     },
@@ -316,13 +323,12 @@ export default {
     updatePasswort() {
       API.apiClient
         .post(`/updatePasswort`, this.editedItem)
-        .then((response) => {
-          console.log(response.status);
-          console.log(response.data.message);
+        .then(() => {
+          //console.log(response.status);
+          //console.log(response.data.message);
           this.closeEditPasswort();
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
           this.closeEditPasswort();
         });
     },
@@ -342,14 +348,13 @@ export default {
       }
       API.apiClient
         .post(`/updateUser`, this.editedItem)
-        .then((response) => {
-          console.log(response.status);
-          console.log(response.data.message);
+        .then(() => {
+          //console.log(response.status);
+          //console.log(response.data.message);
           Object.assign(this.users[this.editedIndex], this.editedItem);
           this.close();
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
           this.close();
         });
     },

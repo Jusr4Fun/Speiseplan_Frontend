@@ -61,9 +61,9 @@ export default {
         email: this.email,
       };
       AuthService.forgotPassword(payload)
-        .then((response) => {
-          console.log(response);
-          console.log("Reset password email sent.");
+        .then(() => {
+          //console.log(response);
+          //console.log("Reset password email sent.");
           this.$router.push("/login");
         })
         .catch();

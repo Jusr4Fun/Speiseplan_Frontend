@@ -100,7 +100,7 @@ export default {
         .then(() => {
           this.$router.push("/login");
         })
-        .catch(console.log("Fehler"));
+        .catch();
     },
   },
 };

@@ -227,10 +227,11 @@ export default {
         .get(`/woche/${this.ausgewaehlteWoche.id + 1}`)
         .then((response) => {
           this.ausgewaehlteWoche = response.data.data;
-          console.log(response.status);
-          console.log(response.data.message);
+          //console.log(response.status);
+          //console.log(response.data.message);
           this.updated = true;
-        });
+        })
+        .catch(() => {});
     },
 
     loadImage() {
@@ -242,8 +243,9 @@ export default {
           this.image =
             "data:image/jpeg;base64," +
             Buffer.from(response.data, "binary").toString("base64");
-          console.log(response.status);
-        });
+          //console.log(response.status);
+        })
+        .catch(() => {});
     },
 
     vorherigeWoche() {
@@ -251,10 +253,11 @@ export default {
         .get(`/woche/${this.ausgewaehlteWoche.id - 1}`)
         .then((response) => {
           this.ausgewaehlteWoche = response.data.data;
-          console.log(response.status);
-          console.log(response.data.message);
+          //console.log(response.status);
+          //console.log(response.data.message);
           this.updated = true;
-        });
+        })
+        .catch(() => {});
     },
   },
 

@@ -420,31 +420,30 @@ export default {
           `/abteilung/${this.user.abteilung_id}/woche/${this.ausgewaehlteWoche.id}`
         )
         .then((response) => {
-          console.log(response.status);
+          //console.log(response.status);
           if (response.status == 204) {
             this.normal = this.normalDefault;
             this.spezialBestellung = this.spezialBestellungDefault;
             this.wochenBestellungID = null;
-            console.log(response.statusText);
+            //console.log(response.statusText);
           } else {
-            console.log(response.data.message);
+            //console.log(response.data.message);
             this.normal = response.data.data.normal;
             this.wochenBestellungID = response.data.data.id;
             this.spezialBestellung = response.data.data.spezial_essen;
           }
         })
-        .then((error) => {
-          console.log(error);
-        });
+        .catch(() => {});
       API.apiClient
         .get(
           `/abteilungTeilnehmerName/${this.user.abteilung_id}/Bestellung/${this.wochenBestellungID}`
         )
         .then((response) => {
           this.teilnehmer = response.data.data;
-          console.log(response.status);
-          console.log(response.data.message);
-        });
+          //console.log(response.status);
+          //console.log(response.data.message);
+        })
+        .catch(() => {});
     },
 
     naechsteWoche() {
@@ -454,9 +453,10 @@ export default {
         .get(`/woche/${this.ausgewaehlteWoche.id + 1}`)
         .then((response) => {
           this.ausgewaehlteWoche = response.data.data;
-          console.log(response.status);
-          console.log(response.data.message);
-        });
+          //console.log(response.status);
+          //console.log(response.data.message);
+        })
+        .catch(() => {});
     },
 
     vorherigeWoche() {
@@ -466,9 +466,10 @@ export default {
         .get(`/woche/${this.ausgewaehlteWoche.id - 1}`)
         .then((response) => {
           this.ausgewaehlteWoche = response.data.data;
-          console.log(response.status);
-          console.log(response.data.message);
-        });
+          //console.log(response.status);
+          //console.log(response.data.message);
+        })
+        .catch(() => {});
     },
 
     timerinterval() {
@@ -501,9 +502,10 @@ export default {
             )
             .then((response) => {
               this.teilnehmer = response.data.data;
-              console.log(response.status);
-              console.log(response.data.message);
-            });
+              //console.log(response.status);
+              //console.log(response.data.message);
+            })
+            .catch(() => {});
         }
       }
     },
@@ -522,7 +524,9 @@ export default {
       const tempUebergabe = {};
       tempUebergabe.spezialBestellung = this.editedItem;
       tempUebergabe.bestellungs_id = this.wochenBestellungID;
-      await API.apiClient.post(`/deleteSpezialEssen`, tempUebergabe);
+      await API.apiClient
+        .post(`/deleteSpezialEssen`, tempUebergabe)
+        .catch(() => {});
       this.editedItem = this.defaultItem;
       this.dialogDelete = false;
       this.updateManual = true;
@@ -546,7 +550,7 @@ export default {
   },
 
   beforeRouteLeave: function (to, from, next) {
-    console.log("Speichern vor dem Verlassen der Seite");
+    //console.log("Speichern vor dem Verlassen der Seite");
     if (to.path == "/login") {
       if (this.$router.currentRoute != "/login") {
         next();

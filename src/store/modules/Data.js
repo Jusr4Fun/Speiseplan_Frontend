@@ -30,9 +30,7 @@ export const actions = {
       .then((response) => {
         commit("SET_AKTUELLEWOCHE", response.data.data);
       })
-      .catch((error) => {
-        console.log(error.data);
-      });
+      .catch(() => {});
   },
   async getWochen({ commit }) {
     const date = {
@@ -43,25 +41,19 @@ export const actions = {
       .then((response) => {
         commit("SET_AKTUELLEWOCHE", response.data.data);
       })
-      .catch((error) => {
-        console.log(error.data);
-      });
+      .catch(() => {});
     await DataService.getNaechsteWoche(date)
       .then((response) => {
         commit("SET_NAECHSTEWOCHE", response.data.data);
       })
-      .catch((error) => {
-        console.log(error.data);
-      });
+      .catch(() => {});
   },
   async getGesamtBestellAktWoche({ commit }, wochenId) {
     await DataService.gesamtBestellungenaktWoche(wochenId)
       .then((response) => {
         commit("SET_GESAMTAKTUELLEWOCHE", response.data.data);
       })
-      .catch((error) => {
-        console.log(error.data);
-      });
+      .catch(() => {});
   },
 };
 

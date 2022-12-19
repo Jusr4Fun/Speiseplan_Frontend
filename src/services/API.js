@@ -18,9 +18,9 @@ apiClient.interceptors.response.use(
     ) {
       store.dispatch("auth/logout");
       if (router.currentRoute != "/login") {
-        router.push("/login");
+        router.push("/login").catch(() => {});
       }
     }
-    return Promise.reject(error);
+    //return Promise.reject(error);
   }
 );

@@ -115,13 +115,12 @@ export default {
     updateUser() {
       API.apiClient
         .post(`/updateUser`, this.editedItem)
-        .then((response) => {
-          console.log(response.status);
-          console.log(response.data.message);
+        .then(() => {
+          //console.log(response.status);
+          //console.log(response.data.message);
           this.checkStatus(true);
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
           this.checkStatus(false);
         });
     },

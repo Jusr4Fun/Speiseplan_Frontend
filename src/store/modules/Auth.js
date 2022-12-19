@@ -30,11 +30,11 @@ export const actions = {
       .then(() => {
         commit("SET_USER", null);
         if (router.currentRoute != "/login") {
-          router.push({ path: "/login" });
+          router.push("/login").catch(() => {});
         }
       })
       .catch((error) => {
-        commit("SET_ERROR", console.log(error.data));
+        commit("SET_ERROR", error.data);
       });
   },
   async getAuthUser({ commit }) {

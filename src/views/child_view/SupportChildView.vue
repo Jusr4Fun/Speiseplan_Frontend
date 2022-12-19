@@ -90,7 +90,7 @@ export default {
       API.apiClient
         .post(`/SupportMail`, temp, { withCredentials: true })
         .then(() => {
-          console.log("Support-Nachricht versendet");
+          //console.log("Support-Nachricht versendet");
           this.checkStatus(true);
         });
     },

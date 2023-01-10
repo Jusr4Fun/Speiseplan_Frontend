@@ -9,8 +9,7 @@
           Standort Hohenreissach <br />
           Abteilung Fachinformatiker <br />
           Alte Plochinger Steige 158 <br />
-          72320 Kirchheim unter Teck <br />
-          Dies it ein Test
+          72320 Kirchheim unter Teck
         </v-card-text>
       </v-card>
     </v-row>
